@@ -1,26 +1,35 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Character : MonoBehaviour
 {
-    [HideInInspector]public enum AnimState {Attack, Dance, Idle, Death,Run, Win, Ulti}
-    AnimState lastState = AnimState.Idle;
-    public static Character CharacterAnim;
-    public CharacterInfo _character;
+    [HideInInspector]public enum weaponType { Arrow, Axe_0, Axe_1, boomerang, candy_0, candy_1, candy_2, candy_4, Hammer, knife, uzi, Z}
+    public UnityAction OnAttack;
+    public UnityAction OnRun;
+    public UnityAction OnIdle;
+    public UnityAction OnDeath;
+    public UnityAction OnWin;
+    public UnityAction OnDance;
+    public UnityAction OnUlti;
     [SerializeField] private Animator anim;
-    public bool Attack, Dance, Idle, Death, Run, Win, Ulti;
+    public float AttackRange;
+    public CharacterInfo _character;
+    public Transform weaponPosition; //GameObject chứa weapon trên tay Character.
+    public GameObject[] weaponArray = new GameObject[12]; //Mảng dùng để quản lý weapon trên tay Character
+    public static Character CharacterAnim;
+    public bool enableToAttackFlag=false;
     private void Start()
     {
         _character = GetComponent<CharacterInfo>();
-        
     }
-    public void attack()
+    public virtual void attack()
     { 
 
     }
 
-    public virtual void move()
+    public virtual void move() 
     {
 
     }
@@ -40,35 +49,26 @@ public class Character : MonoBehaviour
 
     }
 
-    public void CharactorAnim(AnimState _State)
+    public void weaponListCreate() //Thêm vũ khí vào weaponList
     {
-        if(lastState!= _State)
+        for (int i = 0; i < weaponArray.Length; i++)
         {
-            switch (_State)
+            weaponArray[i] = weaponPosition.GetComponent<Transform>().transform.GetChild(i).gameObject;
+        }
+    }
+
+    public void weaponSwitching(weaponType _weaponType)
+    {
+        for (int i = 0; i < weaponArray.Length; i++)
+        {
+            if (i == (int)_weaponType)
             {
-                case AnimState.Attack:
-                    anim.SetTrigger("Attack");
-                    break;
-                case AnimState.Dance:
-                    anim.SetTrigger("Dance");
-                    break;
-                case AnimState.Idle:
-                    anim.SetTrigger("Idle");
-                    break;
-                case AnimState.Death:
-                    anim.SetTrigger("Death");
-                    break;
-                case AnimState.Run:
-                    anim.SetTrigger("Run");
-                    break;
-                case AnimState.Win:
-                    anim.SetTrigger("Win");
-                    break;
-                case AnimState.Ulti:
-                    anim.SetTrigger("Ulti ");
-                    break;
+                weaponArray[i].SetActive(true);
             }
-            lastState = _State;
+            else
+            {
+                weaponArray[i].SetActive(false);
+            }
         }
     }
 }

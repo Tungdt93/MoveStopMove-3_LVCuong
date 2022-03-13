@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2348776288743883153}
+  - component: {fileID: 4899811622521901471}
   m_Layer: 0
   m_Name: Boomerang
-  m_TagString: Untagged
+  m_TagString: boomerang
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31,6 +32,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4899811622521901471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2348776288743883150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f6d59c8ec0e98c4bb7372364351e302, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TargetPosition: {x: 0, y: 0, z: 0}
+  CharacterPos: {x: 0, y: 0, z: 0}
+  bulletSpeed: 8
 --- !u!1001 &4625611951875109782
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -52,35 +68,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4119310336979295037, guid: f46134bba77f1d844947d39630359c44, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.33299994
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4119310336979295037, guid: f46134bba77f1d844947d39630359c44, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.07200019
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4119310336979295037, guid: f46134bba77f1d844947d39630359c44, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.004000336
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4119310336979295037, guid: f46134bba77f1d844947d39630359c44, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.92387956
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4119310336979295037, guid: f46134bba77f1d844947d39630359c44, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.000000059604623
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4119310336979295037, guid: f46134bba77f1d844947d39630359c44, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.00000014901156
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4119310336979295037, guid: f46134bba77f1d844947d39630359c44, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.3826834
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4119310336979295037, guid: f46134bba77f1d844947d39630359c44, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 270
       objectReference: {fileID: 0}
     - target: {fileID: 4119310336979295037, guid: f46134bba77f1d844947d39630359c44, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -88,7 +104,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4119310336979295037, guid: f46134bba77f1d844947d39630359c44, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -45
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f46134bba77f1d844947d39630359c44, type: 3}
@@ -115,3 +131,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.04715063, y: 0.09565173, z: 0.007876451}
   m_Center: {x: 0.02373991, y: 0.0000000060579963, z: 0.000000066113}
+--- !u!95 &6534689530168899263
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8726783645259953291}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 577713435507d2146a37cd3aa71aeae0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

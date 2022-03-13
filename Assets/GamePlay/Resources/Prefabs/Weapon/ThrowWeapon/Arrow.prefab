@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3308106569356353727}
+  - component: {fileID: -8386934873615152991}
   m_Layer: 0
   m_Name: Arrow
-  m_TagString: Untagged
+  m_TagString: Arrow
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31,6 +32,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-8386934873615152991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3308106569356353726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f6d59c8ec0e98c4bb7372364351e302, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TargetPosition: {x: 0, y: 0, z: 0}
+  CharacterPos: {x: 0, y: 0, z: 0}
+  bulletSpeed: 8
 --- !u!1001 &3308106568247881612
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -64,31 +80,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6961151327040864861, guid: c956bdd3c8b7a9445b72bab407920b19, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6961151327040864861, guid: c956bdd3c8b7a9445b72bab407920b19, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.000000029802315
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6961151327040864861, guid: c956bdd3c8b7a9445b72bab407920b19, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.0000000037252894
+      value: -0.70710677
       objectReference: {fileID: 0}
     - target: {fileID: 6961151327040864861, guid: c956bdd3c8b7a9445b72bab407920b19, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.00000005960463
+      value: 0.70710677
       objectReference: {fileID: 0}
     - target: {fileID: 6961151327040864861, guid: c956bdd3c8b7a9445b72bab407920b19, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 6961151327040864861, guid: c956bdd3c8b7a9445b72bab407920b19, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 6961151327040864861, guid: c956bdd3c8b7a9445b72bab407920b19, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c956bdd3c8b7a9445b72bab407920b19, type: 3}

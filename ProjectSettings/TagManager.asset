@@ -3,7 +3,20 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Obstacle
+  - Arrow
+  - Axe_0
+  - Axe_1
+  - boomerang
+  - candy_0
+  - candy_1
+  - candy_2
+  - candy_4
+  - Hammer
+  - knife
+  - uzi
+  - Z
   layers:
   - Default
   - TransparentFX
