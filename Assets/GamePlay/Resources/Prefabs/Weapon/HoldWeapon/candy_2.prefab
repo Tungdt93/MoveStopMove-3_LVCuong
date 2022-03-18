@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 543606441642935902}
   - component: {fileID: 543606441639511678}
   - component: {fileID: 543606441640510654}
+  - component: {fileID: 490524005}
   m_Layer: 0
   m_Name: candy_2
-  m_TagString: Untagged
+  m_TagString: candy_2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,3 +84,15 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &490524005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 543606441642711678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 932de1cfb66a382469826958edc7b34e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -19,6 +19,5 @@ public class Manager : MonoBehaviour
     IEnumerator test()
     {
         yield return new WaitForSeconds(3f);
-        Debug.Log("Haiconvit");
     }
 }

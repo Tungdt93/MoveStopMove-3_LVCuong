@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 1214711172420845463}
   - component: {fileID: 7890451541861631393}
   - component: {fileID: 4520499896244205912}
+  - component: {fileID: 548205838}
   m_Layer: 0
   m_Name: uzi
-  m_TagString: Untagged
+  m_TagString: uzi
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25,13 +26,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2774460056769482116}
-  m_LocalRotation: {x: 0.9877195, y: 0.048513263, z: -0.09108373, w: 0.11730515}
+  m_LocalRotation: {x: -0.9877195, y: -0.04851339, z: 0.091083765, w: -0.117305234}
   m_LocalPosition: {x: 0.07600032, y: 0.010999834, z: 0.007999949}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -193.92, y: 10, z: -4.399994}
 --- !u!33 &7890451541861631393
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -82,3 +83,15 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &548205838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2774460056769482116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 932de1cfb66a382469826958edc7b34e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

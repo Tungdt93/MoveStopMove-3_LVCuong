@@ -4,13 +4,15 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 
-public class EnemyController : Character,IInitializeVariables
+public class EnemyController : Character, IInitializeVariables, IHit
 {
-
     #region Parameter
     public NavMeshAgent agent;
     public Vector3 EnemyDestination;
-    float stopTimeCounting,StandingTime;
+    private float stopTimeCounting,StandingTime;
+    private Vector3 positionToAttack;
+    private int RunOrAttack;
+    public int EnemyLevel;
     #endregion
     // Start is called before the first frame update
     void Start()
@@ -21,7 +23,10 @@ public class EnemyController : Character,IInitializeVariables
     // Update is called once per frame
     void Update()
     {
-        EnemyMovement();
+        if (!IsDeath)
+        {
+            EnemyMovement();
+        }
     }
 
     void EnemyMovement()
@@ -33,11 +38,25 @@ public class EnemyController : Character,IInitializeVariables
             {
                 Moving();
                 stopTimeCounting = 0;
-                StandingTime = Random.Range(3f, 10f);
+                StandingTime = Random.Range(7f, 15f);
+                RunOrAttack  = Random.Range(0, 100); //Tạo giá trị random cho RunOrAttack. Nếu >50 thì Enemy sẽ đứng lại tấn công nếu đang chạy mà gặp đối thủ.
             }
-            else if (Vector3.Distance(transform.position, EnemyDestination) < 0.1f)
+            else if (Vector3.Distance(transform.position, EnemyDestination) < 0.1f&& enableToAttackFlag)
             {
-                StopMoving();
+                positionToAttack=FindNearistEnemy(AttackRange);
+                if (positionToAttack!=Vector3.zero)
+                {
+                    attack();
+                }
+                else
+                {
+                    StopMoving();
+                }
+            }
+            else if (FindNearistEnemy(AttackRange)!= Vector3.zero&& enableToAttackFlag && RunOrAttack>50)
+            {
+                agent.SetDestination(transform.position);
+                attack();
             }
         }
         else
@@ -50,18 +69,12 @@ public class EnemyController : Character,IInitializeVariables
         EnemyDestination = new Vector3(Random.Range(-24f, 24f), 0, Random.Range(-18.5f, 18.5f)); //Find the random position
         agent.SetDestination(EnemyDestination);
         OnRun();
+        enableToAttackFlag = true;
     }
     void StopMoving()
     {
         agent.SetDestination(transform.position);
         OnIdle() ;
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Obstacle"))
-        {
-            EnemyMovement();
-        }
     }
     private void OnTriggerStay(Collider other)
     {
@@ -73,9 +86,106 @@ public class EnemyController : Character,IInitializeVariables
 
     public void InitializeVariables()
     {
+        AttackRange = 5f;
+        AttackSpeed = 10;
         stopTimeCounting = 5f;
         StandingTime = 3f;
         weaponListCreate(); //Khởi tạo danh sách vũ khí
+        weaponSwitching((weaponType)Random.RandomRange((int)weaponType.Arrow, (int)weaponType.Z));   //Đổi vũ khí và Material của vũ khí vào
+        AddWeaponPower();
         EnemyMovement();
+        GameManager.Instance.CharacterList.Add(this.gameObject); //Tất cả các enemy được sinh ra sẽ được Add vào trong CharacterList này để quản lý.
+        IsDeath = false;
+        EnemyLevel = 0;
+    }
+
+    public override void attack()
+    {
+        transform.LookAt(positionToAttack);
+        OnAttack();
+        enableToAttackFlag = false;
+        attackScript.GetComponent<Attack>().SetID(gameObject.GetInstanceID(), opponentID,AttackRange);
+        StartCoroutine(TurntoIdle());
+    }
+    IEnumerator TurntoIdle()
+    {
+        yield return new WaitForSeconds(0.5f);
+        if (!IsDeath)
+        {
+            if (FindNearistEnemy(AttackRange) == Vector3.zero) OnIdle(); //Nếu không có đối phương ở trong bán kính tấn công thì dừng lại.
+            else stopTimeCounting = 100f;                                //Nếu có đối phương ở trong bán kính tấn công thì sẽ chạy đi
+        }
+    }
+
+    public void OnHit()
+    {
+        IsDeath = true;
+        agent.SetDestination(transform.position);
+        GameManager.Instance.KilledAmount++;
+        OnDeath();
+        StartCoroutine(EnemyDeath());
+    }
+
+    IEnumerator EnemyDeath()
+    {
+        yield return new WaitForSeconds(2f);
+        Pooling.instance._Push(gameObject.tag, gameObject);
+    }
+
+    public void AddLevel()
+    {
+        EnemyLevel++;
+        transform.localScale = new Vector3(1f + 0.1f * EnemyLevel, 1f + 0.1f * EnemyLevel, 1f + 0.1f * EnemyLevel);
+        agent.speed = (1f + 0.05f * EnemyLevel) * 5f;
+        AttackRange = 1.05f*AttackRange;
+    }
+
+    public void weaponSwitching(weaponType _weaponType)
+    {
+        for (int i = 0; i < weaponArray.Length; i++)
+        {
+            if (i == (int)_weaponType)
+            {
+                weaponArray[i].GetComponent<Renderer>().sharedMaterial = GetRandomWeaponMaterial(_weaponType);
+                weaponArray[i].SetActive(true);
+            }
+            else
+            {
+                weaponArray[i].SetActive(false);
+            }
+        }
+    }
+
+    Material GetRandomWeaponMaterial(weaponType _weaponType)
+    {
+        switch (_weaponType)
+        {
+            case weaponType.Arrow:
+                return _weapon.ArrowDefaultMaterials[Random.Range(0, _weapon.ArrowDefaultMaterials.Length)];
+            case weaponType.Axe_0:
+                return _weapon.Axe0DefaultMaterials[Random.Range(0, _weapon.Axe0DefaultMaterials.Length)];
+            case weaponType.Axe_1:
+                return _weapon.Axe1DefaultMaterials[Random.Range(0, _weapon.Axe1DefaultMaterials.Length)];
+            case weaponType.boomerang:
+                return _weapon.BoomerangDefaultMaterials[Random.Range(0, _weapon.BoomerangDefaultMaterials.Length)];
+            case weaponType.candy_0:
+                return _weapon.Candy0DefaultMaterials[Random.Range(0, _weapon.Candy0DefaultMaterials.Length)];
+            case weaponType.candy_1:
+                return _weapon.Candy1DefaultMaterials[Random.Range(0, _weapon.Candy1DefaultMaterials.Length)];
+            case weaponType.candy_2:
+                return _weapon.Candy2DefaultMaterials[Random.Range(0, _weapon.Candy2DefaultMaterials.Length)];
+            case weaponType.candy_4:
+                return _weapon.Candy4DefaultMaterials[Random.Range(0, _weapon.Candy4DefaultMaterials.Length)];
+            case weaponType.Hammer:
+                return _weapon.HammerDefaultMaterials[Random.Range(0, _weapon.HammerDefaultMaterials.Length)];
+            case weaponType.knife:
+                return _weapon.KnifeDefaultMaterials[Random.Range(0, _weapon.KnifeDefaultMaterials.Length)];
+            case weaponType.uzi:
+                return _weapon.UziDefaultMaterials[Random.Range(0, _weapon.UziDefaultMaterials.Length)];
+            case weaponType.Z:
+                return _weapon.ZDefaultMaterials[Random.Range(0, _weapon.ZDefaultMaterials.Length)];
+            default:
+                return _weapon.ArrowDefaultMaterials[Random.Range(0, _weapon.ArrowDefaultMaterials.Length)];
+        }
     }
 }

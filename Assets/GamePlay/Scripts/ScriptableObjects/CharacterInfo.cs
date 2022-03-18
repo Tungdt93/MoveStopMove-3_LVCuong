@@ -4,6 +4,6 @@ using UnityEngine;
 public class CharacterInfo : ScriptableObject
 {
     [Header("Character Info")]
-    public int moveSpeed;
+    public float moveSpeed;
     public int health;
 }

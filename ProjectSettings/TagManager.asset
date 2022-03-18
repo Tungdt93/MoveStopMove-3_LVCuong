@@ -17,6 +17,7 @@ TagManager:
   - knife
   - uzi
   - Z
+  - Enemy
   layers:
   - Default
   - TransparentFX

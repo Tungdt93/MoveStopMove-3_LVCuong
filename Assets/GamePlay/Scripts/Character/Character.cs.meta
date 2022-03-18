@@ -4,7 +4,11 @@ MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - characterInfo: {fileID: 11400000, guid: 168585e689e43164eaa4d90f456509fc, type: 2}
+  - anim: {instanceID: 0}
+  - attackScript: {instanceID: 0}
+  - _character: {instanceID: 0}
+  - weaponPosition: {instanceID: 0}
+  - _weapon: {fileID: 11400000, guid: 52972f7c28ff265459a463fe2e840a5d, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

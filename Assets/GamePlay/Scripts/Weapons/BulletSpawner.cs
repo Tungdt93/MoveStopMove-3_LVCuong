@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class BulletSpawner : MonoBehaviour
 {
-    public void CreateBullet(Vector3 BulletPosition)
+
+    public void CreateBullet(Vector3 BulletPosition,int _ownerID,int _opponentID, float _attackRange)
     {
-        GameObject gob = Pooling.instance._Pull(gameObject.tag,GetPath(gameObject.tag));
-        gob.transform.position = BulletPosition;
-        gob.GetComponent<Bullet>().BulletMove(BulletPosition, Vector3.zero);
+        GameObject bullet = Pooling.instance._Pull(gameObject.tag,GetPath(gameObject.tag));
+        bullet.transform.position = BulletPosition;
+        bullet.GetComponent<Bullet>().SetID(_ownerID, _opponentID,_attackRange);
+        bullet.GetComponent<Bullet>().BulletMove();
+        
     }
     string GetPath(string tag)
     {

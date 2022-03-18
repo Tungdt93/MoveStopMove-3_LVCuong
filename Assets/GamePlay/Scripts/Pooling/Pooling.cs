@@ -17,6 +17,7 @@ public class Pooling : MonoBehaviour
     }
     public void _Push(string key,GameObject gob)
     {
+        gob.SetActive(false);
         if (!_Everythings.ContainsKey(key))
         {
             _Everythings.Add(key, new Queue<GameObject>());
@@ -30,17 +31,21 @@ public class Pooling : MonoBehaviour
         {
             if (_Everythings[key].Count > 0)
             {
-                return _Everythings[key].Dequeue();
+                GameObject gobCopy =  _Everythings[key].Dequeue();
+                gobCopy.SetActive(true);
+                return gobCopy;
             }
             else
             {
                 GameObject gobCopy = Instantiate(Resources.Load<GameObject>(path));
+                gobCopy.SetActive(true);
                 return gobCopy;
             }
         }
         else
         {
             GameObject gobCopy = Instantiate(Resources.Load<GameObject>(path));
+            gobCopy.SetActive(true);
             return gobCopy;
         }
     }
