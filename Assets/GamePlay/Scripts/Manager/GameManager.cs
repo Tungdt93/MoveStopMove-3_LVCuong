@@ -8,11 +8,11 @@ public class GameManager : Singleton<GameManager>,IInitializeVariables
     public GameState gameState;
     public ArrayList CharacterList = new ArrayList();
     public Transform[] Obstacle;
-    public int TotalCharacterAmount,IsAliveAmount,KilledAmount,TotalCharAlive,SpawnAmount;
+    public int TotalCharacterAmount, IsAliveAmount, KilledAmount, TotalCharAlive, SpawnAmount;
 
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         InitializeVariables();
     }
@@ -20,15 +20,12 @@ public class GameManager : Singleton<GameManager>,IInitializeVariables
     // Update is called once per frame
     void Update()
     {
-        IsAliveAmount = IsAliveCounting(); 
-        TotalCharAlive = TotalCharacterAmount - KilledAmount;
-        SpawnAmount = TotalCharacterAmount - KilledAmount - IsAliveAmount;
+        IsAliveAmount = IsAliveCounting();
         if (IsAliveAmount==1) gameState = GameState.gameWin;
     }
     public void InitializeVariables()
     {
-        TotalCharacterAmount = 20;
-        IsAliveAmount = IsAliveCounting();
+        TotalCharacterAmount = 50;
         KilledAmount = 0;
     }
 

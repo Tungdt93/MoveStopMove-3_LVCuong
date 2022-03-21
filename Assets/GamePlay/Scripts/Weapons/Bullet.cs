@@ -5,12 +5,14 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     private Vector3 TargetPos,OwnerAttackPos;
-    private float bulletSpeed=10f;
+    private float bulletSpeed;
     private float AttackRange;
     private Rigidbody _bullet;
+    [SerializeField]private Animator anim;
     [SerializeField]private int OwnerID, OpponentID;
     void Start()
     {
+        anim = GetComponent<Animator>();
         BulletMove();
     }
     private void Update()
@@ -25,19 +27,44 @@ public class Bullet : MonoBehaviour
     {
         _bullet = GetComponent<Rigidbody>();
         Vector3 dirrect = TargetPos - transform.position;
-        //transform.Translate(dirrect.normalized * Time.deltaTime* bulletSpeed, Space.World);
-        //_bullet.AddForce(dirrect.normalized * bulletSpeed);
         _bullet.velocity=dirrect.normalized * bulletSpeed;
         transform.LookAt(TargetPos);
-        
     }
 
-    public void SetID(int _ownerID,int _oppenentID,float _attackRange)
+    public void SetID(int _ownerID,int _oppenentID)
     {
         OwnerID = _ownerID;
         OpponentID = _oppenentID;
-        AttackRange = _attackRange;
+        GetPower(OwnerID);
         FindTarget();
+    }
+    
+    void GetPower(int _ownerID)
+    {
+        foreach (GameObject character in GameManager.Instance.CharacterList)
+        {
+            if (character.GetInstanceID() == _ownerID && character.gameObject.activeSelf)
+            {
+                if (character.CompareTag("Enemy"))
+                {
+                    if (character.GetComponent<EnemyController>().IsDeath == false)
+                    {
+                        AttackRange = character.GetComponent<EnemyController>().AttackRange;
+                        bulletSpeed = character.GetComponent<EnemyController>().AttackSpeed;
+                        transform.localScale = character.transform.localScale;
+                    }
+                }
+                else if (character.CompareTag("Player"))
+                {
+                    if (character.GetComponent<PlayerController>().IsDeath == false)
+                    {
+                        AttackRange = character.GetComponent<PlayerController>().AttackRange;
+                        bulletSpeed = character.GetComponent<PlayerController>().AttackSpeed;
+                        transform.localScale = character.transform.localScale;
+                    }
+                }
+            }
+        }
     }
 
     public void FindTarget()
@@ -82,7 +109,6 @@ public class Bullet : MonoBehaviour
                     if (character.GetComponent<EnemyController>().IsDeath == false)
                     {
                         character.GetComponent<EnemyController>().AddLevel();
-                        Debug.Log("EnemyLevel=" + character.GetComponent<EnemyController>().EnemyLevel);
                     }
                 }
                 else if (character.CompareTag("Player"))

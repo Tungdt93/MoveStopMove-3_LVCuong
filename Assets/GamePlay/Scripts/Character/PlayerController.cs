@@ -16,6 +16,7 @@ public class PlayerController : Character, IInitializeVariables, IHit
     void Start()
     {
         InitializeVariables();
+        GameManager.Instance.CharacterList.Add(this.gameObject);    //Thêm player vào trong list Character để quản lý
     }
 
     // Update is called once per frame
@@ -62,7 +63,7 @@ public class PlayerController : Character, IInitializeVariables, IHit
             transform.LookAt(positionToAttack);
             enableToAttackFlag = false;
             OnAttack();
-            attackScript.GetComponent<Attack>().SetID(gameObject.GetInstanceID(), opponentID,AttackRange);
+            attackScript.GetComponent<Attack>().SetID(gameObject.GetInstanceID(), opponentID);
             StartCoroutine(TurntoIdle());
         }
     }
@@ -97,12 +98,14 @@ public class PlayerController : Character, IInitializeVariables, IHit
         AttackRange = 5f;
         AttackSpeed = 10;
         weaponListCreate();//Khởi tạo danh sách vũ khí
-        AddWeaponPower(); 
+        CreateListOfWeaponMaterial();
+        weaponSwitching(weaponType.uzi, new weaponMaterialsType[] {weaponMaterialsType.Uzi_2});
+        AddWeaponPower();
+        ChangeClothes(clothesType.Thor);
         IInitializeSingleton();
         changeAttackRange(AttackRange);             
         IsDeath = false;
         PlayerLevel = 0;
-        GameManager.Instance.CharacterList.Add(this.gameObject);    //Thêm player vào trong list Character để quản lý
     }
 
     #region Reticle
@@ -152,4 +155,43 @@ public class PlayerController : Character, IInitializeVariables, IHit
         _character.moveSpeed =(1f + 0.05f * PlayerLevel) * 5f;  //Tốc độ di chuyển của Player tăng 5% so với khi Start game.
         changeAttackRange(1.05f * AttackRange);                 //Tăng 5% tầm bắn
     }
+
+    public void weaponSwitching(weaponType _weaponType, weaponMaterialsType[] _weaponMaterial)
+    {
+        Material[] CurrentWeaponMaterial = new Material[_weaponMaterial.Length];
+        for (int i = 0; i < weaponArray.Length; i++)
+        {
+            if (i == (int)_weaponType)
+            {
+                CurrentWeaponMaterial = weaponArray[i].GetComponent<Renderer>().sharedMaterials;
+                CurrentWeaponMaterial = GetWeaponMaterial(_weaponType,_weaponMaterial);
+                weaponArray[i].GetComponent<Renderer>().sharedMaterials = CurrentWeaponMaterial;
+                weaponArray[i].SetActive(true);
+            }
+            else
+            {
+                weaponArray[i].SetActive(false);
+            }
+        }
+    }
+
+    Material[] GetWeaponMaterial(weaponType _weaponType, weaponMaterialsType[] _weaponMaterial)
+    {
+        Material[] desireMaterials = new Material[_weaponMaterial.Length];
+        if (_weaponMaterial.Length == 1)
+        {
+            Material[] desireMaterial = ListWeaponMaterial[_weaponMaterial[0]];
+            return desireMaterial;
+        }
+        else
+        {
+            for (int i = 0; i < _weaponMaterial.Length; i++)
+            {
+                desireMaterials[i] = ListWeaponMaterial[_weaponMaterial[i]][0];
+            }
+        }
+        return desireMaterials;
+    }
+
+    
 }

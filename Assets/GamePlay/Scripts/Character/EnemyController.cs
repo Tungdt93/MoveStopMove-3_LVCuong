@@ -18,6 +18,7 @@ public class EnemyController : Character, IInitializeVariables, IHit
     void Start()
     {
         InitializeVariables();
+        GameManager.Instance.CharacterList.Add(this.gameObject); //Tất cả các enemy được sinh ra sẽ được Add vào trong CharacterList này để quản lý.
     }
 
     // Update is called once per frame
@@ -38,7 +39,7 @@ public class EnemyController : Character, IInitializeVariables, IHit
             {
                 Moving();
                 stopTimeCounting = 0;
-                StandingTime = Random.Range(7f, 15f);
+                StandingTime = Random.Range(3f, 7f);
                 RunOrAttack  = Random.Range(0, 100); //Tạo giá trị random cho RunOrAttack. Nếu >50 thì Enemy sẽ đứng lại tấn công nếu đang chạy mà gặp đối thủ.
             }
             else if (Vector3.Distance(transform.position, EnemyDestination) < 0.1f&& enableToAttackFlag)
@@ -93,8 +94,8 @@ public class EnemyController : Character, IInitializeVariables, IHit
         weaponListCreate(); //Khởi tạo danh sách vũ khí
         weaponSwitching((weaponType)Random.RandomRange((int)weaponType.Arrow, (int)weaponType.Z));   //Đổi vũ khí và Material của vũ khí vào
         AddWeaponPower();
+        ChangeClothes((clothesType)Random.Range(0, 24));
         EnemyMovement();
-        GameManager.Instance.CharacterList.Add(this.gameObject); //Tất cả các enemy được sinh ra sẽ được Add vào trong CharacterList này để quản lý.
         IsDeath = false;
         EnemyLevel = 0;
     }
@@ -104,7 +105,7 @@ public class EnemyController : Character, IInitializeVariables, IHit
         transform.LookAt(positionToAttack);
         OnAttack();
         enableToAttackFlag = false;
-        attackScript.GetComponent<Attack>().SetID(gameObject.GetInstanceID(), opponentID,AttackRange);
+        attackScript.GetComponent<Attack>().SetID(gameObject.GetInstanceID(), opponentID);
         StartCoroutine(TurntoIdle());
     }
     IEnumerator TurntoIdle()
@@ -146,7 +147,13 @@ public class EnemyController : Character, IInitializeVariables, IHit
         {
             if (i == (int)_weaponType)
             {
-                weaponArray[i].GetComponent<Renderer>().sharedMaterial = GetRandomWeaponMaterial(_weaponType);
+                Material[] CurrentWeaponMaterial = weaponArray[i].GetComponent<Renderer>().sharedMaterials;
+                Material temp = GetRandomWeaponMaterial(_weaponType);
+                for (int j = 0; j < weaponArray[i].GetComponent<Renderer>().sharedMaterials.Length; j++)
+                {
+                    CurrentWeaponMaterial[j] = temp;
+                }
+                weaponArray[i].GetComponent<Renderer>().sharedMaterials = CurrentWeaponMaterial;
                 weaponArray[i].SetActive(true);
             }
             else
@@ -155,7 +162,7 @@ public class EnemyController : Character, IInitializeVariables, IHit
             }
         }
     }
-
+    
     Material GetRandomWeaponMaterial(weaponType _weaponType)
     {
         switch (_weaponType)

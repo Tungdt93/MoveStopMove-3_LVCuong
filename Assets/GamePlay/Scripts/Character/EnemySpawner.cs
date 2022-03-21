@@ -8,6 +8,7 @@ public class EnemySpawner : MonoBehaviour, IInitializeVariables
     private SpawnArea AreaToSpawn;
     private int CharacterOnMapAmount;
     private int BottomLeft, BottomRight, UpLeft, UpRight, minAmount;  //Dùng biến này để xác định số lượng Character ở từng vùng trong map
+    private int SpawnAmount;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,7 +23,8 @@ public class EnemySpawner : MonoBehaviour, IInitializeVariables
 
     public void InitializeVariables()
     {
-        CharacterOnMapAmount = 7; //Mặc định trên map chỉ có 7 Character
+        CharacterOnMapAmount = 10; //Mặc định trên map chỉ có 10 Character
+        SpawnAmount = GameManager.Instance.TotalCharacterAmount - 2;
     }
 
     #region Find the Area to Spawn Enemy
@@ -67,32 +69,39 @@ public class EnemySpawner : MonoBehaviour, IInitializeVariables
             minAmount = BottomLeft;
             AreaToSpawn = SpawnArea.BottomLeft;
         }
-        if (GameManager.Instance.IsAliveAmount < CharacterOnMapAmount && GameManager.Instance.SpawnAmount > 1)
+        if (GameManager.Instance.IsAliveAmount < CharacterOnMapAmount && SpawnAmount > 1)
         {
+            Debug.Log(SpawnAmount);
             if(AreaToSpawn == SpawnArea.UpRight)
             {
                 GameObject gob = Pooling.instance._Pull("Enemy", "Prefabs/Enemy");
                 gob.transform.position = new Vector3(Random.Range(15f, 24f), 0, Random.Range(10f, 18.5f));
                 gob.GetComponent<EnemyController>().IsDeath = false;
+                gob.GetComponent<EnemyController>().InitializeVariables();
             }
             else if (AreaToSpawn == SpawnArea.UpLeft)
             {
                 GameObject gob = Pooling.instance._Pull("Enemy", "Prefabs/Enemy");
                 gob.transform.position = new Vector3(Random.Range(-24f, -15f), 0, Random.Range(10f, 18.5f));
                 gob.GetComponent<EnemyController>().IsDeath = false;
+                gob.GetComponent<EnemyController>().InitializeVariables();
             }
             else if (AreaToSpawn == SpawnArea.BottomLeft)
             {
                 GameObject gob = Pooling.instance._Pull("Enemy", "Prefabs/Enemy");
                 gob.transform.position = new Vector3(Random.Range(-24f, -15f), 0, Random.Range(-18.5f, -10f));
                 gob.GetComponent<EnemyController>().IsDeath = false;
+                gob.GetComponent<EnemyController>().InitializeVariables();
             }
-            else if (AreaToSpawn == SpawnArea.BottomRight)
+            else  // if (AreaToSpawn == SpawnArea.BottomRight)
             {
                 GameObject gob = Pooling.instance._Pull("Enemy", "Prefabs/Enemy");
                 gob.transform.position = new Vector3(Random.Range(15f,24f), 0, Random.Range(-18.5f, -10f));
                 gob.GetComponent<EnemyController>().IsDeath = false;
+                gob.GetComponent<EnemyController>().InitializeVariables();
             }
+            SpawnAmount--;
+            GameManager.Instance.TotalCharAlive = SpawnAmount;
         }
     }
     #endregion
