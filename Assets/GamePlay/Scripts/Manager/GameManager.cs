@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class GameManager : Singleton<GameManager>,IInitializeVariables
 {
-    public enum GameState { gameStarted, gameOver, gameWin}
+    public enum GameState { gameUI, gameStarted, gameOver, gameWin }
     public GameState gameState;
     public ArrayList CharacterList = new ArrayList();
     public Transform[] Obstacle;
     public int TotalCharacterAmount, IsAliveAmount, KilledAmount, TotalCharAlive, SpawnAmount;
-
-
+    public Camera mainCamera;
+    
     // Start is called before the first frame update
     void Awake()
     {
@@ -21,10 +22,12 @@ public class GameManager : Singleton<GameManager>,IInitializeVariables
     void Update()
     {
         IsAliveAmount = IsAliveCounting();
+        TotalCharAlive = SpawnAmount + IsAliveAmount;
         if (IsAliveAmount==1) gameState = GameState.gameWin;
     }
     public void InitializeVariables()
     {
+        gameState = GameState.gameUI;
         TotalCharacterAmount = 50;
         KilledAmount = 0;
     }

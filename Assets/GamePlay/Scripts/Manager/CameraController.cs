@@ -15,5 +15,6 @@ public class CameraController : MonoBehaviour
     void LateUpdate()
     {
         transform.position = player.position + positionOffset;
+        transform.LookAt(player.position);
     }
 }

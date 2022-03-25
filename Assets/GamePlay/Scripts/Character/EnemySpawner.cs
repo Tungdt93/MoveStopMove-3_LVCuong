@@ -19,6 +19,7 @@ public class EnemySpawner : MonoBehaviour, IInitializeVariables
     void Update()
     {
         FindAreaToSpawn();
+        GameManager.Instance.SpawnAmount = SpawnAmount;
     }
 
     public void InitializeVariables()
@@ -69,9 +70,8 @@ public class EnemySpawner : MonoBehaviour, IInitializeVariables
             minAmount = BottomLeft;
             AreaToSpawn = SpawnArea.BottomLeft;
         }
-        if (GameManager.Instance.IsAliveAmount < CharacterOnMapAmount && SpawnAmount > 1)
+        if (GameManager.Instance.IsAliveAmount < CharacterOnMapAmount && SpawnAmount > 0)
         {
-            Debug.Log(SpawnAmount);
             if(AreaToSpawn == SpawnArea.UpRight)
             {
                 GameObject gob = Pooling.instance._Pull("Enemy", "Prefabs/Enemy");
@@ -101,7 +101,6 @@ public class EnemySpawner : MonoBehaviour, IInitializeVariables
                 gob.GetComponent<EnemyController>().InitializeVariables();
             }
             SpawnAmount--;
-            GameManager.Instance.TotalCharAlive = SpawnAmount;
         }
     }
     #endregion

@@ -5,6 +5,7 @@ using UnityEngine.Events;
 
 public class Character : MonoBehaviour
 {
+    [HideInInspector] public enum CharacterName { ABI, Uniqlo, Bitis, Vinamilk, KoBaYaShi, Ford, Vinfast, ToYoTa, Yamato, Biden, Biladen, Vodka, Yamaha, Honda, Suzuki, NiShiNo, Furuki }
     [HideInInspector]public enum weaponType { Arrow, Axe_0, Axe_1, boomerang, candy_0, candy_1, candy_2, candy_4, Hammer, knife, uzi, Z}
     [HideInInspector]public enum AddPowerType {addition, multiplication}
     [HideInInspector]public enum weaponMaterialsType 
@@ -49,7 +50,7 @@ public class Character : MonoBehaviour
     public GameObject attackScript;
     public float AttackRange;
     public float AttackSpeed;
-    public CharacterInfo _character;
+    public float MoveSpeed;
     public ClothesInfo CharacterClothes;
     public ClothesPower clothesPower;
     public Transform ShieldPosition;
@@ -61,17 +62,19 @@ public class Character : MonoBehaviour
     public GameObject SkinPosition;
     public Transform weaponPosition;                        //GameObject chứa weapon trên tay Character.
     public GameObject[] weaponArray = new GameObject[12];   //Mảng dùng để quản lý weapon trên tay Character
+    public Animator characterCanvasAnim;
     public WeaponInfo _weapon;
+    public EnemyRandomSkin _enemySkin;
     public bool enableToAttackFlag=false;
     public float distanceToNearistEnemy;
     public Vector3 nearistEnemyPosition;
     public int opponentID;
+    public int EnemySkinID;
     public bool IsDeath;
     public Dictionary<weaponMaterialsType, Material[]> ListWeaponMaterial = new Dictionary<weaponMaterialsType, Material[]>();
 
     private void Start()
     {
-        _character = GetComponent<CharacterInfo>();
         _weapon = GetComponent<WeaponInfo>();
     }
     public virtual void attack()
@@ -179,6 +182,7 @@ public class Character : MonoBehaviour
     }
     #endregion
 
+    #region ChangeClothes
     public void ChangeClothes(clothesType _ClothesType)
     {
         SetFullOrNormal _setfullOrNormal;
@@ -361,8 +365,14 @@ public class Character : MonoBehaviour
         {
             Destroy(item.gameObject);
         }
-        SkinPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.SkinMaterials[8];
         PantPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.PantsMaterials[3];
+        if(gameObject.CompareTag("Player")) SkinPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.SkinMaterials[8];   //Nếu là Player thì cho màu vàng là default
+        else                                                                                                                            //Nếu là Enemy thì chọn màu random
+        {
+            EnemySkinID = Random.Range(0, 21);
+            SkinPosition.GetComponent<Renderer>().sharedMaterial = _enemySkin.EnemyColor[EnemySkinID];
+        }
+        
     }
 
     public void ResetShieldPosition()
@@ -388,4 +398,5 @@ public class Character : MonoBehaviour
             Destroy(item.gameObject);
         }
     }
+    #endregion
 }

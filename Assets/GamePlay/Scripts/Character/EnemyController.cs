@@ -7,12 +7,14 @@ using UnityEngine.Events;
 public class EnemyController : Character, IInitializeVariables, IHit
 {
     #region Parameter
+    
     public NavMeshAgent agent;
     public Vector3 EnemyDestination;
     private float stopTimeCounting,StandingTime;
     private Vector3 positionToAttack;
     private int RunOrAttack;
-    public int EnemyLevel;
+    public int Level;
+    public CharacterName enemyName;
     #endregion
     // Start is called before the first frame update
     void Start()
@@ -29,7 +31,6 @@ public class EnemyController : Character, IInitializeVariables, IHit
             EnemyMovement();
         }
     }
-
     void EnemyMovement()
     {
         if (GameManager.Instance.gameState==GameManager.GameState.gameStarted)
@@ -71,6 +72,12 @@ public class EnemyController : Character, IInitializeVariables, IHit
         agent.SetDestination(EnemyDestination);
         OnRun();
         enableToAttackFlag = true;
+        //if (!enableToAttackFlag) TurnOnAttackFlag();
+    }
+    IEnumerator TurnOnAttackFlag()
+    {
+        yield return new WaitForSeconds(0.5f);
+        
     }
     void StopMoving()
     {
@@ -97,7 +104,8 @@ public class EnemyController : Character, IInitializeVariables, IHit
         ChangeClothes((clothesType)Random.Range(0, 24));
         EnemyMovement();
         IsDeath = false;
-        EnemyLevel = 0;
+        Level = 0;
+        enemyName = (CharacterName)Random.Range(0, 16);
     }
 
     public override void attack()
@@ -108,6 +116,8 @@ public class EnemyController : Character, IInitializeVariables, IHit
         attackScript.GetComponent<Attack>().SetID(gameObject.GetInstanceID(), opponentID);
         StartCoroutine(TurntoIdle());
     }
+
+    
     IEnumerator TurntoIdle()
     {
         yield return new WaitForSeconds(0.5f);
@@ -135,9 +145,10 @@ public class EnemyController : Character, IInitializeVariables, IHit
 
     public void AddLevel()
     {
-        EnemyLevel++;
-        transform.localScale = new Vector3(1f + 0.1f * EnemyLevel, 1f + 0.1f * EnemyLevel, 1f + 0.1f * EnemyLevel);
-        agent.speed = (1f + 0.05f * EnemyLevel) * 5f;
+        characterCanvasAnim.GetComponent<Animator>().SetTrigger("AddLevel");
+        Level++;
+        transform.localScale = new Vector3(1f + 0.1f * Level, 1f + 0.1f * Level, 1f + 0.1f * Level);
+        agent.speed = (1f + 0.05f * Level) * 5f;
         AttackRange = 1.05f*AttackRange;
     }
 
@@ -163,7 +174,7 @@ public class EnemyController : Character, IInitializeVariables, IHit
         }
     }
     
-    Material GetRandomWeaponMaterial(weaponType _weaponType)
+    public Material GetRandomWeaponMaterial(weaponType _weaponType)
     {
         switch (_weaponType)
         {

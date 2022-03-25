@@ -6,12 +6,13 @@ using UnityEngine.Events;
 public class PlayerController : Character, IInitializeVariables, IHit
 {
     public static PlayerController instance;
-    [SerializeField] private FloatingJoystick _Joystick;
+    public FloatingJoystick _Joystick;
     [SerializeField] private GameObject _Cycle;
     [SerializeField] private GameObject Reticle;
     [SerializeField] private Material[] CupMaterial;
     private Vector3 positionToAttack;
-    public int PlayerLevel;
+    public int Level;
+    public CharacterName KillerName;
     // Start is called before the first frame update
     void Start()
     {
@@ -36,8 +37,8 @@ public class PlayerController : Character, IInitializeVariables, IHit
             {
                 OnRun();
                 Vector3 temp = transform.position;
-                temp.x -= _Joystick.Vertical * Time.deltaTime * _character.moveSpeed;
-                temp.z += _Joystick.Horizontal * Time.deltaTime * _character.moveSpeed;
+                temp.x -= _Joystick.Vertical * Time.deltaTime * MoveSpeed;
+                temp.z += _Joystick.Horizontal * Time.deltaTime * MoveSpeed;
                 Vector3 moveDirection = new Vector3(temp.x - transform.position.x, 0, temp.z - transform.position.z);
                 moveDirection.Normalize();
                 Quaternion toRotate = Quaternion.LookRotation(moveDirection);
@@ -97,15 +98,15 @@ public class PlayerController : Character, IInitializeVariables, IHit
     {
         AttackRange = 5f;
         AttackSpeed = 10;
-        weaponListCreate();//Khởi tạo danh sách vũ khí
-        CreateListOfWeaponMaterial();
-        weaponSwitching(weaponType.uzi, new weaponMaterialsType[] {weaponMaterialsType.Uzi_2});
-        AddWeaponPower();
-        ChangeClothes(clothesType.Thor);
+        MoveSpeed = 5f;
+        weaponListCreate();                 //Khởi tạo danh sách vũ khí
+        CreateListOfWeaponMaterial();       //Khởi tạo danh sách Material của vũ khí
+        weaponSwitching(weaponType.Hammer, new weaponMaterialsType[] {weaponMaterialsType.Hammer_1});
+        ChangeClothes(clothesType.dabao);
         IInitializeSingleton();
         changeAttackRange(AttackRange);             
         IsDeath = false;
-        PlayerLevel = 0;
+        Level = 0;
     }
 
     #region Reticle
@@ -148,16 +149,20 @@ public class PlayerController : Character, IInitializeVariables, IHit
             }
         }
     }
-    public void AddLevel()                                      //Mỗi lần bắn hạ đối thủ thì sẽ gọi hàm AddLevel
+    public void AddLevel()                                                                              //Mỗi lần bắn hạ đối thủ thì sẽ gọi hàm AddLevel
     {
-        PlayerLevel++;
-        transform.localScale = new Vector3(1f + 0.1f * PlayerLevel, 1f + 0.1f * PlayerLevel, 1f + 0.1f * PlayerLevel); //Khi tăng 1 level thì sẽ tăng Scale của Player thêm 10% so với kích thước khi Start game
-        _character.moveSpeed =(1f + 0.05f * PlayerLevel) * 5f;  //Tốc độ di chuyển của Player tăng 5% so với khi Start game.
-        changeAttackRange(1.05f * AttackRange);                 //Tăng 5% tầm bắn
+        characterCanvasAnim.GetComponent<Animator>().SetTrigger("AddLevel");                            //Chạy Anim +1 khi giết được 1 enemy
+        Level++;
+        transform.localScale = new Vector3(1f + 0.1f * Level, 1f + 0.1f * Level, 1f + 0.1f * Level);    //Khi tăng 1 level thì sẽ tăng Scale của Player thêm 10% so với kích thước khi Start game
+        MoveSpeed = (1f + 0.05f * Level) * 5f;                                                          //Tốc độ di chuyển của Player tăng 5% so với khi Start game.
+        changeAttackRange(1.05f * AttackRange);                                                         //Tăng 5% tầm bắn
     }
 
     public void weaponSwitching(weaponType _weaponType, weaponMaterialsType[] _weaponMaterial)
     {
+        AttackRange = 5f;
+        AttackSpeed = 10;
+        MoveSpeed = 5f;
         Material[] CurrentWeaponMaterial = new Material[_weaponMaterial.Length];
         for (int i = 0; i < weaponArray.Length; i++)
         {
@@ -173,6 +178,7 @@ public class PlayerController : Character, IInitializeVariables, IHit
                 weaponArray[i].SetActive(false);
             }
         }
+        AddWeaponPower();
     }
 
     Material[] GetWeaponMaterial(weaponType _weaponType, weaponMaterialsType[] _weaponMaterial)
@@ -192,6 +198,4 @@ public class PlayerController : Character, IInitializeVariables, IHit
         }
         return desireMaterials;
     }
-
-    
 }

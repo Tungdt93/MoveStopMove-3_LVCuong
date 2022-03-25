@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,19 +8,16 @@ public class Bullet : MonoBehaviour
     private float bulletSpeed;
     private float AttackRange;
     private Rigidbody _bullet;
-    [SerializeField]private Animator anim;
     [SerializeField]private int OwnerID, OpponentID;
     void Start()
     {
-        anim = GetComponent<Animator>();
         BulletMove();
     }
     private void Update()
     {
         if (Vector3.Distance(OwnerAttackPos, transform.position) > AttackRange)
         {
-            _bullet.velocity = Vector3.zero;
-            Pooling.instance._Push(gameObject.tag, gameObject);
+            DestroyBullet();
         }
     }
     public void BulletMove()
@@ -85,17 +82,41 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.GetInstanceID() == OpponentID)
+        if(other.gameObject.GetInstanceID() != OwnerID) //Xét xem đối tượng trúng đạn có phải Owner ko?
         {
-            other.gameObject.GetComponent<IHit>().OnHit();
-            AddOwnerLevel();
-            _bullet.velocity = Vector3.zero;
-            Pooling.instance._Push(gameObject.tag, gameObject);
+            if (other.CompareTag("Enemy"))              //Kiểm tra xem đối tượng trúng đạn có còn sống không (Vì đối tượng còn sống lúc Owner bắn đạn nhưng có thể đã trúng đạn và chết trước khi đạn của Owner bắn đến nơi) )
+            {
+                if (other.GetComponent<EnemyController>().IsDeath == false)
+                {
+                    other.gameObject.GetComponent<IHit>().OnHit();
+                    AddOwnerLevel();
+                    DestroyBullet();
+                }
+            }
+            else if (other.CompareTag("Player"))
+            {
+                if (other.GetComponent<PlayerController>().IsDeath == false)
+                {
+                    foreach (GameObject character in GameManager.Instance.CharacterList) //Lấy tên Enemy đã giết Player
+                    {
+                        if (character.GetInstanceID() == OwnerID)
+                        {
+                            if (character.CompareTag("Enemy"))
+                            {
+                                other.GetComponent<PlayerController>().KillerName = character.GetComponent<EnemyController>().enemyName;
+                            }
+                        }
+                    }
+                    other.gameObject.GetComponent<IHit>().OnHit();
+                    AddOwnerLevel();
+                    DestroyBullet();
+                }
+            }
+            
         }
         else if (other.CompareTag("Obstacle"))
         {
-            _bullet.velocity = Vector3.zero;
-            Pooling.instance._Push(gameObject.tag, gameObject);
+            DestroyBullet();
         }
     }
     void AddOwnerLevel()
@@ -120,5 +141,10 @@ public class Bullet : MonoBehaviour
                 }
             }
         }
+    }
+    void DestroyBullet()
+    {
+        _bullet.velocity = Vector3.zero;
+        Pooling.instance._Push(gameObject.tag, gameObject);
     }
 }

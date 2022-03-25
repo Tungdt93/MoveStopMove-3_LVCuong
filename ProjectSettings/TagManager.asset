@@ -18,6 +18,7 @@ TagManager:
   - uzi
   - Z
   - Enemy
+  - Weapon
   layers:
   - Default
   - TransparentFX
