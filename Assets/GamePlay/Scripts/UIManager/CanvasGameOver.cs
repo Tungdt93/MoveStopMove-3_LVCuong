@@ -9,6 +9,7 @@ public class CanvasGameOver : UICanvas
     [SerializeField] private TextMeshProUGUI RankText;
     [SerializeField] private TextMeshProUGUI KillerName;
     [SerializeField] private TextMeshProUGUI CoinAmount;
+    private PlayerController playerController;
     // Update is called once per frame
     void Update()
     {
@@ -22,10 +23,11 @@ public class CanvasGameOver : UICanvas
     {
         base.OnInit();
         StartCoroutine(ShowGuide());
-        RankText.GetComponent<TextMeshProUGUI>().text = "#" + GameManager.Instance.TotalCharAlive;
-        KillerName.GetComponent<TextMeshProUGUI>().text = ""+FindObjectOfType<PlayerController>().KillerName;
-        CoinAmount.GetComponent<TextMeshProUGUI>().text ="" + FindObjectOfType<PlayerController>().Level;
-        UIManager.Instance.coinAmount+= FindObjectOfType<PlayerController>().Level;
+        playerController = FindObjectOfType<PlayerController>();
+        RankText.text = "#" + GameManager.Instance.TotalCharAlive;
+        KillerName.text = ""+ playerController.KillerName;
+        CoinAmount.text ="" + playerController.Level;
+        UIManager.Instance.coinAmount+= playerController.Level;
         PlayerPrefs.SetInt("Score", UIManager.Instance.coinAmount);
         PlayerPrefs.Save();
     }

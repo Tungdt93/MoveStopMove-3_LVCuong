@@ -5,23 +5,8 @@ using UnityEngine;
 public class CharacterAnim : MonoBehaviour
 {
     [HideInInspector] public enum CharacterAnimState { Attack, Dance, Idle, Death, Run, Win, Ulti }
-
+    public CharacterAnimState lastState;
     private Animator animator;
-
-    protected bool isAttack;
-    protected bool isDance;
-    protected bool isIdle;
-    protected bool isDeath;
-    protected bool isRun;
-    protected bool isWin;
-    protected bool isUlti;
-    public bool IsAttack { get => isAttack; set => isAttack = value; }
-    public bool IsDance { get => isDance; set => isDance = value; }
-    public bool IsIdle { get => isIdle; set => isIdle = value; }
-    public bool IsDeath { get => isDeath; set => isDeath = value; }
-    public bool IsRun { get => isRun; set => isRun = value; }
-    public bool IsWin { get => isWin; set => isWin = value; }
-    public bool IsUlti { get => isUlti; set => isUlti = value; }
 
     // Start is called before the first frame update
     void Awake()
@@ -32,92 +17,40 @@ public class CharacterAnim : MonoBehaviour
     private void InitializeVariables()
     {
         animator = GetComponent<Animator>();
-        isAttack = false;
-        isDance = false;
-        isIdle = false;
-        isDeath = false;
-        isRun = false;
-        isWin = false;
-        isUlti = false;
-        SetAnim(CharacterAnimState.Idle);
+        lastState = CharacterAnimState.Idle;
     }
 
     #region Set Character Animation
     public void SetAnim(CharacterAnimState _CharacterAnimation)
     {
-        switch (_CharacterAnimation)
+        if(_CharacterAnimation!= lastState)
         {
-            case CharacterAnimState.Attack:
-                isAttack = true;
-                isDance = false;
-                isIdle = false;
-                isDeath = false;
-                isRun = false;
-                isWin = false;
-                isUlti = false;
-                break;
-            case CharacterAnimState.Dance:
-                isAttack = false;
-                isDance = true;
-                isIdle = false;
-                isDeath = false;
-                isRun = false;
-                isWin = false;
-                isUlti = false;
-                break;
-            case CharacterAnimState.Idle:
-                isAttack = false;
-                isDance = false;
-                isIdle = true;
-                isDeath = false;
-                isRun = false;
-                isWin = false;
-                isUlti = false;
-                break;
-            case CharacterAnimState.Death:
-                isAttack = false;
-                isDance = false;
-                isIdle = false;
-                isDeath = true;
-                isRun = false;
-                isWin = false;
-                isUlti = false;
-                break;
-            case CharacterAnimState.Run:
-                isAttack = false;
-                isDance = false;
-                isIdle = false;
-                isDeath = false;
-                isRun = true;
-                isWin = false;
-                isUlti = false;
-                break;
-            case CharacterAnimState.Win:
-                isAttack = false;
-                isDance = false;
-                isIdle = false;
-                isDeath = false;
-                isRun = false;
-                isWin = true;
-                isUlti = false;
-                break;
-            case CharacterAnimState.Ulti:
-                isAttack = false;
-                isDance = false;
-                isIdle = false;
-                isDeath = false;
-                isRun = false;
-                isWin = false;
-                isUlti = true;
-                break;
+            switch (_CharacterAnimation)
+            {
+                case CharacterAnimState.Attack:
+                    animator.SetTrigger("Attack");
+                    break;
+                case CharacterAnimState.Dance:
+                    animator.SetTrigger("Dance");
+                    break;
+                case CharacterAnimState.Idle:
+                    animator.SetTrigger("Idle");
+                    break;
+                case CharacterAnimState.Death:
+                    animator.SetTrigger("Death");
+                    break;
+                case CharacterAnimState.Run:
+                    animator.SetTrigger("Run");
+                    break;
+                case CharacterAnimState.Win:
+                    animator.SetTrigger("Win");
+                    break;
+                case CharacterAnimState.Ulti:
+                    animator.SetTrigger("Ulti");
+                    break;
+            }
+            lastState = _CharacterAnimation;
         }
-        animator.SetBool("IsAttack", isAttack);
-        animator.SetBool("IsDance", isDance);
-        animator.SetBool("IsIdle", isIdle);
-        animator.SetBool("IsDeath", isDeath);
-        animator.SetBool("IsRun", isRun);
-        animator.SetBool("IsWin", isWin);
-        animator.SetBool("IsUlti", isUlti);
     }
     #endregion
 
@@ -150,6 +83,16 @@ public class CharacterAnim : MonoBehaviour
     public void UltiAnimation()
     {
         SetAnim(CharacterAnimState.Ulti);
+    }
+    public void ResetAllTriggerAnim()
+    {
+        animator.ResetTrigger("Attack");
+        animator.ResetTrigger("Dance");
+        animator.ResetTrigger("Idle");
+        animator.ResetTrigger("Death");
+        animator.ResetTrigger("Run");
+        animator.ResetTrigger("Win");
+        animator.ResetTrigger("Ulti");
     }
     #endregion
 }

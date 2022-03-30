@@ -7,88 +7,120 @@ using UnityEngine.Events;
 public class EnemyController : Character, IInitializeVariables, IHit
 {
     #region Parameter
-    
+    [SerializeField] private Animator enemyAnimation;
     public NavMeshAgent agent;
     public Vector3 EnemyDestination;
-    private float stopTimeCounting,StandingTime;
+    private float timeLimit;
+    private float timeCouting;
     private Vector3 positionToAttack;
-    private int RunOrAttack;
     public int Level;
     public CharacterName enemyName;
+    private IState currentState;
     #endregion
     // Start is called before the first frame update
+    private void Awake()
+    {
+        enemyName = (CharacterName)Random.Range(0, 16);
+        ChangeClothes((clothesType)Random.Range(0, 24));
+    }
     void Start()
     {
+        OnResetAllTrigger();
+        ChangeState(new StateEnemyIdle());
         InitializeVariables();
-        GameManager.Instance.CharacterList.Add(this.gameObject); //Tất cả các enemy được sinh ra sẽ được Add vào trong CharacterList này để quản lý.
+        GameManager.Instance.CharacterList.Add(this); //Tất cả các enemy được sinh ra sẽ được Add vào trong CharacterList này để quản lý.
     }
-
     // Update is called once per frame
     void Update()
     {
-        if (!IsDeath)
+        timeCouting += Time.deltaTime;
+        if (!IsDeath&& GameManager.Instance.gameState == GameManager.GameState.gameStarted)
         {
-            EnemyMovement();
+            if (currentState != null)
+            {
+                currentState.OnExecute(this);
+            }
         }
     }
-    void EnemyMovement()
+    public void EnemyMovement()
     {
+        OnRun();
         if (GameManager.Instance.gameState==GameManager.GameState.gameStarted)
         {
-            stopTimeCounting += Time.deltaTime;
-            if (stopTimeCounting > StandingTime)
-            {
-                Moving();
-                stopTimeCounting = 0;
-                StandingTime = Random.Range(3f, 7f);
-                RunOrAttack  = Random.Range(0, 100); //Tạo giá trị random cho RunOrAttack. Nếu >50 thì Enemy sẽ đứng lại tấn công nếu đang chạy mà gặp đối thủ.
-            }
-            else if (Vector3.Distance(transform.position, EnemyDestination) < 0.1f&& enableToAttackFlag)
-            {
-                positionToAttack=FindNearistEnemy(AttackRange);
-                if (positionToAttack!=Vector3.zero)
-                {
-                    attack();
-                }
-                else
-                {
-                    StopMoving();
-                }
-            }
-            else if (FindNearistEnemy(AttackRange)!= Vector3.zero&& enableToAttackFlag && RunOrAttack>50)
-            {
-                agent.SetDestination(transform.position);
-                attack();
-            }
-        }
-        else
-        {
-            StopMoving();
+            agent.SetDestination(EnemyDestination);
+            enableToAttackFlag = true;
+            OnRun();
         }
     }
-    void Moving()
-    {
-        EnemyDestination = new Vector3(Random.Range(-24f, 24f), 0, Random.Range(-18.5f, 18.5f)); //Find the random position
-        agent.SetDestination(EnemyDestination);
-        OnRun();
-        enableToAttackFlag = true;
-        //if (!enableToAttackFlag) TurnOnAttackFlag();
-    }
-    IEnumerator TurnOnAttackFlag()
-    {
-        yield return new WaitForSeconds(0.5f);
-        
-    }
-    void StopMoving()
+
+    public void EnemyStopMoving()
     {
         agent.SetDestination(transform.position);
-        OnIdle() ;
     }
-    private void OnTriggerStay(Collider other)
+
+    public void FindNextDestination()
+    {
+        EnemyDestination = new Vector3(Random.Range(-24f, 24f), 0, Random.Range(-18.5f, 18.5f)); //Find the random position
+    }
+
+    public void CheckArriveDestination()
+    {
+        if (Vector3.Distance(transform.position, EnemyDestination)<0.3f)
+        {
+            ChangeState(new StateEnemyIdle());
+        }
+    }
+    public void ChangeState(IState state)   //Hàm chuyển đổi trạng thái State
+    {
+        if (currentState != null)
+        {
+            currentState.OnExit(this);
+        }
+        currentState = state;
+        if (currentState != null)
+        {
+            currentState.OnEnter(this);
+        }
+    }
+    public void RestartTimeCounting()
+    {
+        timeCouting = 0;
+        timeLimit = Random.Range(3f, 7f);
+    }
+    
+    public void CheckIdletoAttack()
+    {
+        if (FindNearistEnemy(AttackRange) != Vector3.zero&& enableToAttackFlag) ChangeState(new StateEnemyAttack());
+        else if(timeCouting>1.03f) ChangeState(new StateEnemyPatrol());
+    }
+
+    public void CheckPatroltoAttack()
+    {
+        if (FindNearistEnemy(AttackRange) != Vector3.zero && enableToAttackFlag&& timeCouting>2f) ChangeState(new StateEnemyAttack());
+    }
+    public void CheckIfAttackIsDone()
+    {
+        if(enemyAnimation.GetCurrentAnimatorStateInfo(0).normalizedTime>1|| timeCouting>1.03f)
+        {
+            ChangeState(new StateEnemyIdle());
+        }
+    }
+
+    public void CheckIdletoPatrol()
+    {
+        if (timeCouting > timeLimit)
+        {
+            ChangeState(new StateEnemyPatrol());
+        }
+    }
+
+
+    
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Obstacle"))
         {
-            EnemyMovement();
+            ChangeState(new StateEnemyPatrol());
         }
     }
 
@@ -96,38 +128,20 @@ public class EnemyController : Character, IInitializeVariables, IHit
     {
         AttackRange = 5f;
         AttackSpeed = 10;
-        stopTimeCounting = 5f;
-        StandingTime = 3f;
         weaponListCreate(); //Khởi tạo danh sách vũ khí
         weaponSwitching((weaponType)Random.RandomRange((int)weaponType.Arrow, (int)weaponType.Z));   //Đổi vũ khí và Material của vũ khí vào
         AddWeaponPower();
-        ChangeClothes((clothesType)Random.Range(0, 24));
-        EnemyMovement();
         IsDeath = false;
         Level = 0;
-        enemyName = (CharacterName)Random.Range(0, 16);
     }
 
     public override void attack()
     {
-        transform.LookAt(positionToAttack);
+        transform.LookAt(FindNearistEnemy(AttackRange));
         OnAttack();
         enableToAttackFlag = false;
-        attackScript.GetComponent<Attack>().SetID(gameObject.GetInstanceID(), opponentID);
-        StartCoroutine(TurntoIdle());
+        attackScript.SetID(gameObject.GetInstanceID(), opponentID);
     }
-
-    
-    IEnumerator TurntoIdle()
-    {
-        yield return new WaitForSeconds(0.5f);
-        if (!IsDeath)
-        {
-            if (FindNearistEnemy(AttackRange) == Vector3.zero) OnIdle(); //Nếu không có đối phương ở trong bán kính tấn công thì dừng lại.
-            else stopTimeCounting = 100f;                                //Nếu có đối phương ở trong bán kính tấn công thì sẽ chạy đi
-        }
-    }
-
     public void OnHit()
     {
         IsDeath = true;
@@ -143,9 +157,9 @@ public class EnemyController : Character, IInitializeVariables, IHit
         Pooling.instance._Push(gameObject.tag, gameObject);
     }
 
-    public void AddLevel()
+    public override void AddLevel()
     {
-        characterCanvasAnim.GetComponent<Animator>().SetTrigger("AddLevel");
+        characterCanvasAnim.SetTrigger("AddLevel");
         Level++;
         transform.localScale = new Vector3(1f + 0.1f * Level, 1f + 0.1f * Level, 1f + 0.1f * Level);
         agent.speed = (1f + 0.05f * Level) * 5f;
@@ -173,7 +187,7 @@ public class EnemyController : Character, IInitializeVariables, IHit
             }
         }
     }
-    
+    #region Get Random Weapon Material
     public Material GetRandomWeaponMaterial(weaponType _weaponType)
     {
         switch (_weaponType)
@@ -206,4 +220,5 @@ public class EnemyController : Character, IInitializeVariables, IHit
                 return _weapon.ArrowDefaultMaterials[Random.Range(0, _weapon.ArrowDefaultMaterials.Length)];
         }
     }
+    #endregion
 }

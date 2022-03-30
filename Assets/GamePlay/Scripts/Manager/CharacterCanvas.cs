@@ -11,45 +11,50 @@ public class CharacterCanvas : MonoBehaviour
     [SerializeField] private Image CharacterLevelBG;
     [SerializeField] private TextMeshProUGUI CharacterLevelText;
     [SerializeField] private TextMeshProUGUI CharacterName;
+    private Character character;
+    private Canvas canvas;
+    private PlayerController characterController;
+    private EnemyController enemyController;
+    private TextMeshProUGUI characterNameTextMeshPro;
+    private TextMeshProUGUI characterLevelTextMeshPro;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        characterLevelTextMeshPro = CharacterLevelText.gameObject.GetComponent<TextMeshProUGUI>();
+        character = Character.gameObject.GetComponent<Character>();
+        characterController = Character.GetComponent<PlayerController>();
+        enemyController = Character.GetComponent<EnemyController>();
+        canvas = GetComponent<Canvas>();
     }
-    private void Update()
+    private void Start()
     {
+        characterNameTextMeshPro = CharacterName.gameObject.GetComponent<TextMeshProUGUI>();
         if (Character.gameObject.CompareTag("Player"))
         {
-            if (Character.gameObject.GetComponent<PlayerController>().IsDeath == true) gameObject.GetComponent<Canvas>().enabled = false;
-            else gameObject.GetComponent<Canvas>().enabled = true;
+            characterNameTextMeshPro.text = "You";
+            characterNameTextMeshPro.color = Color.black;
+            characterLevelTextMeshPro.text = "" + characterController.Level;
+            CharacterLevelBG.color = Color.black;
         }
         else
         {
-            if (Character.gameObject.GetComponent<EnemyController>().IsDeath == true) gameObject.GetComponent<Canvas>().enabled = false;
-            else gameObject.GetComponent<Canvas>().enabled = true;
+            characterNameTextMeshPro.text = "" + enemyController.enemyName;
+            characterNameTextMeshPro.color = _enemySkin.EnemyColor[enemyController.EnemySkinID].color;
+            characterLevelTextMeshPro.text = "" + enemyController.Level;
+            CharacterLevelBG.color = _enemySkin.EnemyColor[enemyController.EnemySkinID].color;
         }
+    }
+    private void Update()
+    {
+        if (character.IsDeath == true) canvas.enabled = false;
+        else canvas.enabled = true;
+        if (Character.gameObject.CompareTag("Player")) characterLevelTextMeshPro.text = "" + characterController.Level;
+        else characterLevelTextMeshPro.text = "" + enemyController.Level;
     }
     // Update is called once per frame
     void LateUpdate()
     {
         transform.LookAt(new Vector3(GameManager.Instance.mainCamera.transform.position.x, GameManager.Instance.mainCamera.transform.position.y, Character.transform.position.z));
         transform.localScale =new Vector3(1/Character.localScale.x, 1 / Character.localScale.y, 1 / Character.localScale.z);
-
-        if (Character.gameObject.CompareTag("Player"))
-        {
-            CharacterName.gameObject.GetComponent<TextMeshProUGUI>().text = "You";
-            CharacterName.gameObject.GetComponent<TextMeshProUGUI>().color = Color.black;
-            CharacterLevelText.gameObject.GetComponent<TextMeshProUGUI>().text = "" + Character.GetComponent<PlayerController>().Level;
-            CharacterLevelBG.color = Color.black;
-        }
-        else
-        {
-            CharacterName.gameObject.GetComponent<TextMeshProUGUI>().text = "" + Character.GetComponent<EnemyController>().enemyName;
-            CharacterName.gameObject.GetComponent<TextMeshProUGUI>().color = _enemySkin.EnemyColor[Character.GetComponent<EnemyController>().EnemySkinID].color;
-            CharacterLevelText.gameObject.GetComponent<TextMeshProUGUI>().text = "" + Character.GetComponent<EnemyController>().Level;
-            CharacterLevelBG.color = _enemySkin.EnemyColor[Character.GetComponent<EnemyController>().EnemySkinID].color;
-
-        }
-        
     }
 }

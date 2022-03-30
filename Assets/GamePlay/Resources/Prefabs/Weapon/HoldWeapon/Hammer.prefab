@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2623468945312435813}
   - component: {fileID: 2623468945313205829}
   - component: {fileID: 2623468945314204805}
-  - component: {fileID: 1724698701}
+  - component: {fileID: 886295642094448745}
   m_Layer: 0
   m_Name: Hammer
   m_TagString: Hammer
@@ -85,7 +85,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1724698701
+--- !u!114 &886295642094448745
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

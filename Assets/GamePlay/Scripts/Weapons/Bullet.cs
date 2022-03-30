@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour
     private float bulletSpeed;
     private float AttackRange;
     private Rigidbody _bullet;
-    [SerializeField]private int OwnerID, OpponentID;
+    private int OwnerID, OpponentID;
     void Start()
     {
         BulletMove();
@@ -38,27 +38,15 @@ public class Bullet : MonoBehaviour
     
     void GetPower(int _ownerID)
     {
-        foreach (GameObject character in GameManager.Instance.CharacterList)
+        for (int i = 0; i < GameManager.Instance.CharacterList.Count; i++)
         {
-            if (character.GetInstanceID() == _ownerID && character.gameObject.activeSelf)
+            if (GameManager.Instance.CharacterList[i].gameObject.GetInstanceID() == _ownerID && GameManager.Instance.CharacterList[i].gameObject.activeSelf)
             {
-                if (character.CompareTag("Enemy"))
+                if (GameManager.Instance.CharacterList[i].IsDeath == false)
                 {
-                    if (character.GetComponent<EnemyController>().IsDeath == false)
-                    {
-                        AttackRange = character.GetComponent<EnemyController>().AttackRange;
-                        bulletSpeed = character.GetComponent<EnemyController>().AttackSpeed;
-                        transform.localScale = character.transform.localScale;
-                    }
-                }
-                else if (character.CompareTag("Player"))
-                {
-                    if (character.GetComponent<PlayerController>().IsDeath == false)
-                    {
-                        AttackRange = character.GetComponent<PlayerController>().AttackRange;
-                        bulletSpeed = character.GetComponent<PlayerController>().AttackSpeed;
-                        transform.localScale = character.transform.localScale;
-                    }
+                    AttackRange = GameManager.Instance.CharacterList[i].AttackRange;
+                    bulletSpeed = GameManager.Instance.CharacterList[i].AttackSpeed;
+                    transform.localScale = GameManager.Instance.CharacterList[i].gameObject.transform.localScale;
                 }
             }
         }
@@ -66,27 +54,27 @@ public class Bullet : MonoBehaviour
 
     public void FindTarget()
     {
-        foreach (GameObject character in GameManager.Instance.CharacterList)
+        for (int i = 0; i < GameManager.Instance.CharacterList.Count; i++)
         {
-            if (character.GetInstanceID() == OpponentID && character.gameObject.activeSelf)
+            if (GameManager.Instance.CharacterList[i].gameObject.GetInstanceID() == OpponentID && GameManager.Instance.CharacterList[i].gameObject.activeSelf)
             {
-                TargetPos = character.transform.position;
+                TargetPos = GameManager.Instance.CharacterList[i].gameObject.transform.position;
                 TargetPos.y = 1f;
             }
-            else if(character.GetInstanceID() == OwnerID)
+            else if (GameManager.Instance.CharacterList[i].gameObject.GetInstanceID() == OwnerID)
             {
-                OwnerAttackPos = character.transform.position;
+                OwnerAttackPos = GameManager.Instance.CharacterList[i].gameObject.transform.position;
             }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.GetInstanceID() != OwnerID) //Xét xem đối tượng trúng đạn có phải Owner ko?
+        if (other.gameObject.GetInstanceID() != OwnerID) //Xét xem đối tượng trúng đạn có phải Owner ko?
         {
             if (other.CompareTag("Enemy"))              //Kiểm tra xem đối tượng trúng đạn có còn sống không (Vì đối tượng còn sống lúc Owner bắn đạn nhưng có thể đã trúng đạn và chết trước khi đạn của Owner bắn đến nơi) )
             {
-                if (other.GetComponent<EnemyController>().IsDeath == false)
+                if (other.GetComponent<Character>().IsDeath == false)
                 {
                     other.gameObject.GetComponent<IHit>().OnHit();
                     AddOwnerLevel();
@@ -95,15 +83,15 @@ public class Bullet : MonoBehaviour
             }
             else if (other.CompareTag("Player"))
             {
-                if (other.GetComponent<PlayerController>().IsDeath == false)
+                if (other.GetComponent<Character>().IsDeath == false)
                 {
-                    foreach (GameObject character in GameManager.Instance.CharacterList) //Lấy tên Enemy đã giết Player
+                    for (int i = 0; i < GameManager.Instance.CharacterList.Count; i++)
                     {
-                        if (character.GetInstanceID() == OwnerID)
+                        if (GameManager.Instance.CharacterList[i].gameObject.GetInstanceID() == OwnerID)
                         {
-                            if (character.CompareTag("Enemy"))
+                            if (GameManager.Instance.CharacterList[i].gameObject.CompareTag("Enemy"))
                             {
-                                other.GetComponent<PlayerController>().KillerName = character.GetComponent<EnemyController>().enemyName;
+                                other.GetComponent<PlayerController>().KillerName = GameManager.Instance.CharacterList[i].gameObject.GetComponent<EnemyController>().enemyName;
                             }
                         }
                     }
@@ -112,7 +100,7 @@ public class Bullet : MonoBehaviour
                     DestroyBullet();
                 }
             }
-            
+
         }
         else if (other.CompareTag("Obstacle"))
         {
@@ -121,23 +109,13 @@ public class Bullet : MonoBehaviour
     }
     void AddOwnerLevel()
     {
-        foreach (GameObject character in GameManager.Instance.CharacterList)
+        for (int i = 0; i < GameManager.Instance.CharacterList.Count; i++)
         {
-            if (character.GetInstanceID() == OwnerID && character.gameObject.activeSelf)
+            if (GameManager.Instance.CharacterList[i].gameObject.GetInstanceID() == OwnerID && GameManager.Instance.CharacterList[i].gameObject.activeSelf)
             {
-                if (character.CompareTag("Enemy"))
+                if (GameManager.Instance.CharacterList[i].IsDeath == false)
                 {
-                    if (character.GetComponent<EnemyController>().IsDeath == false)
-                    {
-                        character.GetComponent<EnemyController>().AddLevel();
-                    }
-                }
-                else if (character.CompareTag("Player"))
-                {
-                    if (character.GetComponent<PlayerController>().IsDeath == false)
-                    {
-                        character.GetComponent<PlayerController>().AddLevel();
-                    }
+                    GameManager.Instance.CharacterList[i].AddLevel();
                 }
             }
         }

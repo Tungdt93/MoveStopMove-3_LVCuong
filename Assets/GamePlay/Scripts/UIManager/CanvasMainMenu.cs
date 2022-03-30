@@ -18,14 +18,9 @@ public class CanvasMainMenu : UICanvas
         if (UIManager.Instance.playerEXP > 100) UpdatePlayerRank(25);
     }
 
-    public void StartGame()
-    {
-
-    }
-
     public override void OnInit()
     {
-        _coinAmountText.gameObject.GetComponent<TextMeshProUGUI>().text = "" + UIManager.Instance.coinAmount;
+        _coinAmountText.text = "" + UIManager.Instance.coinAmount;
     }
 
     public void PlayGame()
@@ -100,12 +95,11 @@ public class CanvasMainMenu : UICanvas
                 goldRank.gameObject.SetActive(true);
             }
         }
-        playerEXPSlider.GetComponent<Slider>().value = UIManager.Instance.playerEXP;
-
+        playerEXPSlider.value = UIManager.Instance.playerEXP;
     }
 
     public void UpdateBest(int zone, int best)
     {
-        _zonebest.GetComponent<TextMeshProUGUI>().text = "ZONE: " + zone + " - BEST:#" + best;
+        _zonebest.text = "ZONE: " + zone + " - BEST:#" + best;
     }
 }

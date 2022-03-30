@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3992918020434449591}
   - component: {fileID: 3992918020437841047}
   - component: {fileID: 3992918020436874839}
-  - component: {fileID: 1487393050}
+  - component: {fileID: 6619971089781836120}
   m_Layer: 0
   m_Name: Axe_1
   m_TagString: Axe_1
@@ -86,7 +86,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1487393050
+--- !u!114 &6619971089781836120
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

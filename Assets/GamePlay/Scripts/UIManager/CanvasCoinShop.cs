@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -8,7 +8,7 @@ public class CanvasCoinShop : UICanvas
     [SerializeField] private TextMeshProUGUI _coinAmountText;
     public override void OnInit()
     {
-        _coinAmountText.gameObject.GetComponent<TextMeshProUGUI>().text = "" + UIManager.Instance.coinAmount;
+        _coinAmountText.text = "" + UIManager.Instance.coinAmount;
     }
     public void XButton()
     {
@@ -17,10 +17,10 @@ public class CanvasCoinShop : UICanvas
 
     public void BuyCoin()
     {
-        UIManager.Instance.coinAmount += 25000;
+        UIManager.Instance.coinAmount += 1000;
         PlayerPrefs.SetInt("Score", UIManager.Instance.coinAmount);
         PlayerPrefs.Save();
-        _coinAmountText.GetComponent<TextMeshProUGUI>().text = "" + UIManager.Instance.coinAmount;
+        _coinAmountText.text = "" + UIManager.Instance.coinAmount;
     }
 
     public void NoAds()
@@ -28,6 +28,17 @@ public class CanvasCoinShop : UICanvas
         UIManager.Instance.coinAmount = 0;
         PlayerPrefs.SetInt("Score", UIManager.Instance.coinAmount);
         PlayerPrefs.Save();
-        _coinAmountText.GetComponent<TextMeshProUGUI>().text = "" + UIManager.Instance.coinAmount;
+        _coinAmountText.text = "" + UIManager.Instance.coinAmount;
+    }
+
+    public void ResetItem()    //Reset trạng thái mua đồ về chưa mua
+    {
+        for (int i = 0; i < 25; i++)
+        {
+            PlayerPrefs.SetInt("ClothesShop" + (ClothType)i, 1);
+            PlayerPrefs.Save();
+            PlayerPrefs.SetInt("WeaponShop" + (weaponType)i, 1);
+            PlayerPrefs.Save();
+        }
     }
 }

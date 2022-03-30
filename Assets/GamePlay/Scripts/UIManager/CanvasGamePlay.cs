@@ -25,6 +25,9 @@ public class CanvasGamePlay : UICanvas
         if (GameManager.Instance.gameState == GameManager.GameState.gameOver)
         {
             StartCoroutine(GameOver());
+        }else if (GameManager.Instance.gameState == GameManager.GameState.gameWin)
+        {
+            StartCoroutine(GameWin());
         }
     }
 
@@ -41,12 +44,18 @@ public class CanvasGamePlay : UICanvas
 
     public void UpdateAliveNumber()
     {
-        aliveAmount.GetComponent<TextMeshProUGUI>().text = "Alive: " + GameManager.Instance.TotalCharAlive;
+        aliveAmount.text = "Alive: " + GameManager.Instance.TotalCharAlive;
     }
 
     IEnumerator GameOver()
     {
         yield return new WaitForSeconds(2);
         UIManager.Instance.OpenUI(UIName.GameOver);
+    }
+
+    IEnumerator GameWin()
+    {
+        yield return new WaitForSeconds(2);
+        UIManager.Instance.OpenUI(UIName.Victory);
     }
 }

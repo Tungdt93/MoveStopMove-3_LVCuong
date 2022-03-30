@@ -26,6 +26,7 @@ public class PlayerAnim : CharacterAnim,ISubscribers,IInitializeVariables
         playerController.OnWin += WinAnimation;
         playerController.OnRun += RunAnimation;
         playerController.OnUlti += UltiAnimation;
+        playerController.OnResetAllTrigger += ResetAllTriggerAnim;
     }
     public void UnsubscribeEvent()
     {
@@ -36,6 +37,7 @@ public class PlayerAnim : CharacterAnim,ISubscribers,IInitializeVariables
         playerController.OnWin -= WinAnimation;
         playerController.OnRun -= RunAnimation;
         playerController.OnUlti -= UltiAnimation;
+        playerController.OnResetAllTrigger -= ResetAllTriggerAnim;
     }
     public void InitializeVariables()
     {

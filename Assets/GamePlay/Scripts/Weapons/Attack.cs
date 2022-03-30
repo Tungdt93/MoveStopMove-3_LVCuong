@@ -5,9 +5,11 @@ using UnityEngine;
 public class Attack: MonoBehaviour
 {
     [SerializeField] private Transform weaponPosition;
+    [SerializeField] private Transform enemyPosition;
     private int OwnerID, OpponentID;
     void _HideWeapon()
     {
+        
         foreach (Transform weapon in weaponPosition)
         {
             weapon.GetComponent<MeshRenderer>().enabled = false;

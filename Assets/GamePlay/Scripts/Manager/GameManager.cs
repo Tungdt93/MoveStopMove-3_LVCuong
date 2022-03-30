@@ -1,21 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 public class GameManager : Singleton<GameManager>,IInitializeVariables
 {
     public enum GameState { gameUI, gameStarted, gameOver, gameWin }
     public GameState gameState;
-    public ArrayList CharacterList = new ArrayList();
+    public List<Character> CharacterList = new List<Character>();
     public Transform[] Obstacle;
-    public int TotalCharacterAmount, IsAliveAmount, KilledAmount, TotalCharAlive, SpawnAmount;
     public Camera mainCamera;
-    
+    public Camera shopCamera;
+    public int TotalCharacterAmount, IsAliveAmount, KilledAmount, TotalCharAlive, SpawnAmount;
+    private int LevelID;
     // Start is called before the first frame update
     void Awake()
     {
         InitializeVariables();
+        LevelID = 1;
+        LevelID = PlayerPrefs.GetInt("LevelID");
     }
 
     // Update is called once per frame
@@ -23,7 +27,6 @@ public class GameManager : Singleton<GameManager>,IInitializeVariables
     {
         IsAliveAmount = IsAliveCounting();
         TotalCharAlive = SpawnAmount + IsAliveAmount;
-        if (IsAliveAmount==1) gameState = GameState.gameWin;
     }
     public void InitializeVariables()
     {
@@ -35,26 +38,22 @@ public class GameManager : Singleton<GameManager>,IInitializeVariables
     public int IsAliveCounting() //Số character đang có trên map
     {
         int IsAliveAmount=0;
-        foreach (GameObject character in CharacterList)
+        for (int i = 0; i < CharacterList.Count; i++)
         {
-            if (character.activeSelf)
+            if (CharacterList[i].gameObject.activeSelf)
             {
-                if (character.CompareTag("Enemy"))
-                {
-                    if (character.GetComponent<EnemyController>().IsDeath == false)
-                    {
-                        IsAliveAmount++;
-                    }
-                }
-                else if (character.CompareTag("Player"))
-                {
-                    if (character.GetComponent<PlayerController>().IsDeath == false)
-                    {
-                        IsAliveAmount++;
-                    }
-                }
+                if (CharacterList[i].IsDeath == false) IsAliveAmount++;
             }
         }
         return IsAliveAmount;
+    }
+
+    public void LoadNewLevel()
+    {
+        LevelID++;
+        if (LevelID > 2) LevelID = 1;
+        PlayerPrefs.SetInt("LevelID", LevelID);
+        PlayerPrefs.Save();
+        SceneManager.LoadScene("Level" + LevelID);
     }
 }

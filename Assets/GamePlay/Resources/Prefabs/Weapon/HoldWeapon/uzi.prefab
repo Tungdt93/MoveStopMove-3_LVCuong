@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1214711172420845463}
   - component: {fileID: 7890451541861631393}
   - component: {fileID: 4520499896244205912}
-  - component: {fileID: 548205838}
+  - component: {fileID: 4630611076825464523}
   m_Layer: 0
   m_Name: uzi
   m_TagString: uzi
@@ -85,7 +85,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &548205838
+--- !u!114 &4630611076825464523
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

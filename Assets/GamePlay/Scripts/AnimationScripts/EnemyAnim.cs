@@ -25,6 +25,7 @@ public class EnemyAnim : CharacterAnim, ISubscribers
         enemyController.OnWin += WinAnimation;
         enemyController.OnDance += DanceAnimation;
         enemyController.OnUlti += UltiAnimation;
+        enemyController.OnResetAllTrigger += ResetAllTriggerAnim;
     }
 
     public void UnsubscribeEvent()
@@ -35,7 +36,7 @@ public class EnemyAnim : CharacterAnim, ISubscribers
         enemyController.OnDeath -= DeathAnimation;
         enemyController.OnWin -= WinAnimation;
         enemyController.OnDance -= DanceAnimation;
-        enemyController.OnUlti -= UltiAnimation;
+        enemyController.OnResetAllTrigger -= ResetAllTriggerAnim;
 
     }
     public void InitializeVariables()

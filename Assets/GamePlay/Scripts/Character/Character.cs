@@ -47,7 +47,8 @@ public class Character : MonoBehaviour
     public UnityAction OnWin;
     public UnityAction OnDance;
     public UnityAction OnUlti;
-    public GameObject attackScript;
+    public UnityAction OnResetAllTrigger;
+    public Attack attackScript;
     public float AttackRange;
     public float AttackSpeed;
     public float MoveSpeed;
@@ -58,8 +59,8 @@ public class Character : MonoBehaviour
     public Transform HeadPosition;
     public Transform TailPosition;
     public Transform BackPosition;
-    public GameObject PantPosition;
-    public GameObject SkinPosition;
+    public Renderer PantsPositionRenderer;
+    public Renderer SkinPositionRenderer;
     public Transform weaponPosition;                        //GameObject chứa weapon trên tay Character.
     public GameObject[] weaponArray = new GameObject[12];   //Mảng dùng để quản lý weapon trên tay Character
     public Animator characterCanvasAnim;
@@ -72,10 +73,11 @@ public class Character : MonoBehaviour
     public int EnemySkinID;
     public bool IsDeath;
     public Dictionary<weaponMaterialsType, Material[]> ListWeaponMaterial = new Dictionary<weaponMaterialsType, Material[]>();
-
     private void Start()
     {
         _weapon = GetComponent<WeaponInfo>();
+        PantsPositionRenderer = GetComponent<Renderer>();
+        SkinPositionRenderer = GetComponent<Renderer>();
     }
     public virtual void attack()
     { 
@@ -83,6 +85,11 @@ public class Character : MonoBehaviour
     }
 
     public virtual void move() 
+    {
+
+    }
+
+    public virtual void AddLevel()
     {
 
     }
@@ -98,27 +105,15 @@ public class Character : MonoBehaviour
     public Vector3 FindNearistEnemy(float attackRange)
     {
         distanceToNearistEnemy = 1000f;
-        foreach (GameObject character in GameManager.Instance.CharacterList)
+        for (int i = 0; i < GameManager.Instance.CharacterList.Count; i++)
         {
-            if (character.GetInstanceID() != gameObject.GetInstanceID()&&Vector3.Distance(character.transform.position,gameObject.transform.position)< attackRange&&character.activeSelf)
+            if (GameManager.Instance.CharacterList[i].gameObject.GetInstanceID() != gameObject.GetInstanceID() && Vector3.Distance(GameManager.Instance.CharacterList[i].gameObject.transform.position, gameObject.transform.position) < attackRange && GameManager.Instance.CharacterList[i].gameObject.activeSelf)
             {
-                if (character.CompareTag("Enemy"))
+                if (Vector3.Distance(GameManager.Instance.CharacterList[i].gameObject.transform.position, gameObject.transform.position) < distanceToNearistEnemy && GameManager.Instance.CharacterList[i].IsDeath == false)
                 {
-                    if (Vector3.Distance(character.transform.position, gameObject.transform.position) < distanceToNearistEnemy && character.GetComponent<EnemyController>().IsDeath == false)
-                    {
-                        distanceToNearistEnemy = Vector3.Distance(character.transform.position, gameObject.transform.position);
-                        nearistEnemyPosition = character.transform.position;
-                        opponentID = character.GetInstanceID(); //Lấy ID của đối phương
-                    }
-                }
-                else if (character.CompareTag("Player"))
-                {
-                    if (Vector3.Distance(character.transform.position, gameObject.transform.position) < distanceToNearistEnemy && character.GetComponent<PlayerController>().IsDeath == false)
-                    {
-                        distanceToNearistEnemy = Vector3.Distance(character.transform.position, gameObject.transform.position);
-                        nearistEnemyPosition = character.transform.position;
-                        opponentID = character.GetInstanceID(); //Lấy ID của đối phương
-                    }
+                    distanceToNearistEnemy = Vector3.Distance(GameManager.Instance.CharacterList[i].gameObject.transform.position, gameObject.transform.position);
+                    nearistEnemyPosition = GameManager.Instance.CharacterList[i].gameObject.transform.position;
+                    opponentID = GameManager.Instance.CharacterList[i].gameObject.GetInstanceID(); //Lấy ID của đối phương
                 }
             }
         }
@@ -246,67 +241,67 @@ public class Character : MonoBehaviour
             case clothesType.Khien:
                 {
                     ResetShieldPosition();
-                    Instantiate(CharacterClothes.LeftHandPosition[2], LeftHandPosition);
+                    Instantiate(CharacterClothes.LeftHandPosition[2], ShieldPosition);
                     break;
                 }
             case clothesType.Shield:
                 {
                     ResetShieldPosition();
-                    Instantiate(CharacterClothes.LeftHandPosition[3], LeftHandPosition);
+                    Instantiate(CharacterClothes.LeftHandPosition[3], ShieldPosition);
                     break;
                 }
             case clothesType.Batman:
                 {
                     ResetClothes();
-                    PantPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.PantsMaterials[4];
+                    PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[4];
                     break;
                 }
             case clothesType.Chambi:
                 {
                     ResetClothes();
-                    PantPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.PantsMaterials[5];
+                    PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[5];
                     break;
                 }
             case clothesType.comy:
                 {
                     ResetClothes();
-                    PantPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.PantsMaterials[6];
+                    PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[6];
                     break;
                 }
             case clothesType.dabao:
                 {
                     ResetClothes();
-                    PantPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.PantsMaterials[7];
+                    PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[7];
                     break;
                 }
             case clothesType.onion:
                 {
                     ResetClothes();
-                    PantPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.PantsMaterials[8];
+                    PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[8];
                     break;
                 }
             case clothesType.pokemon:
                 {
                     ResetClothes();
-                    PantPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.PantsMaterials[9];
+                    PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[9];
                     break;
                 }
             case clothesType.rainbow:
                 {
                     ResetClothes();
-                    PantPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.PantsMaterials[10];
+                    PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[10];
                     break;
                 }
             case clothesType.Skull:
                 {
                     ResetClothes();
-                    PantPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.PantsMaterials[11];
+                    PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[11];
                     break;
                 }
             case clothesType.Vantim:
                 {
                     ResetClothes();
-                    PantPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.PantsMaterials[12];
+                    PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[12];
                     break;
                 }
             case clothesType.Devil:
@@ -316,7 +311,7 @@ public class Character : MonoBehaviour
                     Instantiate(CharacterClothes.HeadPosition[10],HeadPosition);
                     Instantiate(CharacterClothes.BackPosition[2],BackPosition);
                     Instantiate(CharacterClothes.TailPosition[0],TailPosition);
-                    SkinPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.SkinMaterials[3];
+                    SkinPositionRenderer.sharedMaterial = CharacterClothes.SkinMaterials[3];
                     break;
                 }
             case clothesType.Angel:
@@ -326,7 +321,7 @@ public class Character : MonoBehaviour
                     Instantiate(CharacterClothes.HeadPosition[9], HeadPosition);
                     Instantiate(CharacterClothes.BackPosition[0], BackPosition);
                     Instantiate(CharacterClothes.LeftHandPosition[0], LeftHandPosition);
-                    SkinPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.SkinMaterials[0];
+                    SkinPositionRenderer.sharedMaterial = CharacterClothes.SkinMaterials[0];
                     break;
                 }
             case clothesType.Witch:
@@ -335,20 +330,20 @@ public class Character : MonoBehaviour
                     ResetLeftHandPosition();
                     Instantiate(CharacterClothes.HeadPosition[12], HeadPosition);
                     Instantiate(CharacterClothes.LeftHandPosition[1], LeftHandPosition);
-                    SkinPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.SkinMaterials[6];
+                    SkinPositionRenderer.sharedMaterial = CharacterClothes.SkinMaterials[6];
                     break;
                 }
             case clothesType.Deadpool:
                 {
                     Instantiate(CharacterClothes.BackPosition[1], BackPosition);
-                    SkinPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.SkinMaterials[1];
+                    SkinPositionRenderer.sharedMaterial = CharacterClothes.SkinMaterials[1];
                     break;
                 }
             case clothesType.Thor:
                 {
                     ResetHeadPosition();
                     Instantiate(CharacterClothes.HeadPosition[11], HeadPosition);
-                    SkinPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.SkinMaterials[5];
+                    SkinPositionRenderer.sharedMaterial = CharacterClothes.SkinMaterials[5];
                     break;
                 }
         }
@@ -365,12 +360,12 @@ public class Character : MonoBehaviour
         {
             Destroy(item.gameObject);
         }
-        PantPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.PantsMaterials[3];
-        if(gameObject.CompareTag("Player")) SkinPosition.GetComponent<Renderer>().sharedMaterial = CharacterClothes.SkinMaterials[8];   //Nếu là Player thì cho màu vàng là default
+        PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[3];
+        if(gameObject.CompareTag("Player")) SkinPositionRenderer.sharedMaterial = CharacterClothes.SkinMaterials[8];                    //Nếu là Player thì cho màu vàng là default
         else                                                                                                                            //Nếu là Enemy thì chọn màu random
         {
             EnemySkinID = Random.Range(0, 21);
-            SkinPosition.GetComponent<Renderer>().sharedMaterial = _enemySkin.EnemyColor[EnemySkinID];
+            SkinPositionRenderer.sharedMaterial = _enemySkin.EnemyColor[EnemySkinID];
         }
         
     }

@@ -47,7 +47,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f6d59c8ec0e98c4bb7372364351e302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim: {fileID: 1831333757}
   OwnerID: 0
   OpponentID: 0
 --- !u!65 &7786898061235246190
@@ -139,7 +138,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 1724698701, guid: 7a68ac8241e7226498784e219730acb4, type: 3}
+    - {fileID: 886295642094448745, guid: 7a68ac8241e7226498784e219730acb4, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 7a68ac8241e7226498784e219730acb4, type: 3}
 --- !u!4 &7220165561076457405 stripped
 Transform:

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 35951663725966140}
   - component: {fileID: 35951663723066140}
   - component: {fileID: 35951663724196316}
-  - component: {fileID: 1694171797}
+  - component: {fileID: -4102188064273911891}
   m_Layer: 0
   m_Name: knife
   m_TagString: knife
@@ -85,7 +85,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1694171797
+--- !u!114 &-4102188064273911891
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

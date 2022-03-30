@@ -47,7 +47,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f6d59c8ec0e98c4bb7372364351e302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 8
   OwnerID: 0
   OpponentID: 0
 --- !u!65 &63970086738045456
@@ -151,7 +150,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 490524005, guid: da7533802ed162d429597b5b86930482, type: 3}
+    - {fileID: -7889349526887652212, guid: da7533802ed162d429597b5b86930482, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: da7533802ed162d429597b5b86930482, type: 3}
 --- !u!4 &3500963069225806621 stripped
 Transform:

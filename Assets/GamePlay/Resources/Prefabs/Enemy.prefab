@@ -922,7 +922,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lastClothes: 0
   anim: {fileID: 4078347367356811948}
-  attackScript: {fileID: 6937911000371926469}
+  attackScript: {fileID: 1398794697370946774}
   AttackRange: 6
   AttackSpeed: 0
   MoveSpeed: 0
@@ -933,8 +933,8 @@ MonoBehaviour:
   HeadPosition: {fileID: 978224149}
   TailPosition: {fileID: 412726222}
   BackPosition: {fileID: 1020221591}
-  PantPosition: {fileID: 5241449945652588194}
-  SkinPosition: {fileID: 7000408545858145417}
+  PantsPositionRenderer: {fileID: 7768287063610122053}
+  SkinPositionRenderer: {fileID: 1454489383942543910}
   weaponPosition: {fileID: 1398794697677499322}
   weaponArray:
   - {fileID: 0}
@@ -958,10 +958,11 @@ MonoBehaviour:
   opponentID: 0
   EnemySkinID: 0
   IsDeath: 0
+  enemyAnimation: {fileID: 4078347367356811948}
   agent: {fileID: 1398794698284983615}
   EnemyDestination: {x: 0, y: 0, z: 0}
   Level: 0
-  enemyName: 0
+  enemyName: 7
 --- !u!136 &1398794698284983613
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1472,7 +1473,7 @@ PrefabInstance:
     - target: {fileID: -6057140222963153312, guid: 38f9296dc39c27647a0119314baf12a2, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 28af779cf47c85048a893ae8bdf03990, type: 2}
+      objectReference: {fileID: 9100000, guid: 358ec4f886dd034428dac13be82c18ed, type: 2}
     - target: {fileID: -4216859302048453862, guid: 38f9296dc39c27647a0119314baf12a2, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -1549,6 +1550,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1912126175820078846, guid: 38f9296dc39c27647a0119314baf12a2, type: 3}
   m_PrefabInstance: {fileID: 1398794697370946764}
   m_PrefabAsset: {fileID: 0}
+--- !u!137 &1454489383942543910 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -8699012472884554006, guid: 38f9296dc39c27647a0119314baf12a2, type: 3}
+  m_PrefabInstance: {fileID: 1398794697370946764}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &4078347367356811948 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: -6057140222963153312, guid: 38f9296dc39c27647a0119314baf12a2, type: 3}
@@ -1562,11 +1568,6 @@ Transform:
 --- !u!4 &4447732594385683318 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3373197664844238778, guid: 38f9296dc39c27647a0119314baf12a2, type: 3}
-  m_PrefabInstance: {fileID: 1398794697370946764}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &5241449945652588194 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -2606217863934893458, guid: 38f9296dc39c27647a0119314baf12a2, type: 3}
   m_PrefabInstance: {fileID: 1398794697370946764}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &5891011370357719286 stripped
@@ -1653,6 +1654,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 522e03f54e31a8e469e16925f5278f02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastState: 0
   enemy: {fileID: 1398794698284983608}
 --- !u!114 &1398794697370946774
 MonoBehaviour:
@@ -1667,9 +1669,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponPosition: {fileID: 1398794697677499322}
---- !u!1 &7000408545858145417 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8237072887224533061, guid: 38f9296dc39c27647a0119314baf12a2, type: 3}
+--- !u!137 &7768287063610122053 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -529177695146175607, guid: 38f9296dc39c27647a0119314baf12a2, type: 3}
   m_PrefabInstance: {fileID: 1398794697370946764}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1398794697565873250

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4096176790645707030}
   - component: {fileID: 4096176790644937014}
   - component: {fileID: 4096176790643807222}
-  - component: {fileID: 979104262}
+  - component: {fileID: -8114737932596942849}
   m_Layer: 0
   m_Name: candy_1
   m_TagString: candy_1
@@ -85,7 +85,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &979104262
+--- !u!114 &-8114737932596942849
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

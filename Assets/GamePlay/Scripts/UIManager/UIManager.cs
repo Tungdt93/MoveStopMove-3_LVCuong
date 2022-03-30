@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum UIName { BlockRayCast, CoinShop, GameOver, GamePlay, MainMenu, Revive, Setting, SkinShop, WeaponShop }  //NOTE: thứ tự trong UIName phải trùng với thứ tự trong Resources/Prefabs/UI
+public enum UIName { BlockRayCast, CoinShop, GameOver, GamePlay, MainMenu, Setting, SkinShop, Victory, WeaponShop }  //NOTE: thứ tự trong UIName phải trùng với thứ tự trong Resources/Prefabs/UI
 public enum PlayerRank { Wood, Silver, Gold }
 
 public class UIManager : MonoBehaviour

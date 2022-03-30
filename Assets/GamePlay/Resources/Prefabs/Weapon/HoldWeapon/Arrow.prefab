@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6961151327040864861}
   - component: {fileID: 2144273070201616491}
   - component: {fileID: 5691834784025035922}
-  - component: {fileID: 661078536}
+  - component: {fileID: 1960057472270956151}
   m_Layer: 0
   m_Name: Arrow
   m_TagString: Arrow
@@ -86,7 +86,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &661078536
+--- !u!114 &1960057472270956151
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
