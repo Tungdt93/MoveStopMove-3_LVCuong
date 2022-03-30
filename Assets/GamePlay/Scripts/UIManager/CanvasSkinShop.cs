@@ -74,23 +74,28 @@ public class CanvasSkinShop : UICanvas
     }
     public void XButton()
     {
+        GameManager.Instance.PlayClickSound();
         UIManager.Instance.OpenUI(UIName.MainMenu);
     }
     #region Show Shop
     public void HatShopClick()
     {
+        GetRauID();
         OpenShop(ShopType.HatShop);
     }
     public void PantShopClick()
     {
+        GetChambiID();
         OpenShop(ShopType.PantShop);
     }
     public void ShieldShopClick()
     {
+        GetShieldID();
         OpenShop(ShopType.ShieldShop);
     }
     public void SetShopClick()
     {
+        GetDevilID();
         OpenShop(ShopType.SetShop);
     }
     void OpenShop(ShopType _shopType)
@@ -115,150 +120,175 @@ public class CanvasSkinShop : UICanvas
     #region Get ID
     public void GetRauID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 8;
         ChangePrice();
     }
 
     public void GetCrownID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 2;
         ChangePrice();
     }
 
     public void GetEarID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 3;
         ChangePrice();
     }
 
     public void GetHatID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 4;
         ChangePrice();
     }
 
     public void GetHatCapID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 5;
         ChangePrice();
     }
 
     public void GetHatYellowID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 6;
         ChangePrice();
     }
 
     public void GetArrowID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 0;
         ChangePrice();
     }
 
     public void GetCowboyID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 1;
         ChangePrice();
     }
 
     public void GetHeadphoneID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 7;
         ChangePrice();
     }
 
     public void GetChambiID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 12;
         ChangePrice();
     }
 
     public void GetComyID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 13;
         ChangePrice();
     }
 
     public void GetDabaoID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 14;
         ChangePrice();
     }
 
     public void GetOnionID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 15;
         ChangePrice();
     }
 
     public void GetRainBowID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 17;
         ChangePrice();
     }
 
     public void GetVantimID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 19;
         ChangePrice();
     }
 
     public void GetBatmanID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 11;
         ChangePrice();
     }
 
     public void GetPikachuID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 16;
         ChangePrice();
     }
 
     public void GetSkullID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 18;
         ChangePrice();
     }
 
     public void GetShieldID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 10;
         ChangePrice();
     }
 
     public void GetKhienID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 9;
         ChangePrice();
     }
 
     public void GetDevilID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 20;
         ChangePrice();
     }
 
     public void GetAngelID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 21;
         ChangePrice();
     }
 
     public void GetWitchID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 22;
         ChangePrice();
     }
 
     public void GetDeadpoolID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 23;
         ChangePrice();
     }
 
     public void GetThorID()
     {
+        GameManager.Instance.PlayClickSound();
         ClothesID = 24;
         ChangePrice();
     }
@@ -284,6 +314,7 @@ public class CanvasSkinShop : UICanvas
 
     public void BuyClothes()
     {
+        GameManager.Instance.PlayClickSound();
         if (UIManager.Instance.coinAmount>= ClothesPrice[ClothesID])
         {
             UIManager.Instance.coinAmount -= ClothesPrice[ClothesID];
@@ -305,6 +336,7 @@ public class CanvasSkinShop : UICanvas
     }
     public void Equip()
     {
+        GameManager.Instance.PlayClickSound();
         for (int i = 0; i < ClothesPrice.Length; i++)
         {
             if (ClothesShopInfo[(ClothType)i] == ClothState.Equipped)   //Chuyển tất cả những vật phẩm đang ở trạng thái Equipped sang trạng thái Select

@@ -6,8 +6,6 @@ public class StateEnemyPatrol : IState
 {
     public void OnEnter(EnemyController enemy)
     {
-        enemy.OnResetAllTrigger();
-        enemy.OnRun();
         enemy.FindNextDestination();
         enemy.RestartTimeCounting();
     }

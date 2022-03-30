@@ -15,6 +15,7 @@ public class CanvasGameOver : UICanvas
     {
         if (Input.GetMouseButtonDown(0)&& GuideText.gameObject.activeSelf)
         {
+            GameManager.Instance.PlayClickSound();
             GuideText.gameObject.SetActive(false);
             Application.LoadLevel(Application.loadedLevel);
         }
@@ -22,6 +23,7 @@ public class CanvasGameOver : UICanvas
     public override void OnInit()
     {
         base.OnInit();
+        GameManager.Instance.PlayLoseAudio();
         StartCoroutine(ShowGuide());
         playerController = FindObjectOfType<PlayerController>();
         RankText.text = "#" + GameManager.Instance.TotalCharAlive;

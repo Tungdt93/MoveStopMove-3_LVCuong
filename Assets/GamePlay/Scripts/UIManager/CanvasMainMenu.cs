@@ -25,12 +25,14 @@ public class CanvasMainMenu : UICanvas
 
     public void PlayGame()
     {
+        GameManager.Instance.PlayClickSound();
         UIManager.Instance.OpenUI(UIName.GamePlay);
         GameManager.Instance.gameState = GameManager.GameState.gameStarted;
     }
 
     public void OpenWeaponShop()
     {
+        GameManager.Instance.PlayClickSound();
         UIManager.Instance.OpenUI(UIName.WeaponShop);
     }
 
@@ -41,25 +43,30 @@ public class CanvasMainMenu : UICanvas
 
     public void OpenCoinShop()
     {
+        GameManager.Instance.PlayClickSound();
         UIManager.Instance.OpenUI(UIName.CoinShop);
     }
 
     public void ChangeOpenSoundState()
     {
+        GameManager.Instance.PlayClickSound();
         UIManager.Instance.SoundState = !UIManager.Instance.SoundState;
         if (UIManager.Instance.SoundState)
         {
             OpenSound.gameObject.SetActive(true);
             NoSound.gameObject.SetActive(false);
+            GameManager.Instance.OpenSound = true;
         }
         else
         {
             OpenSound.gameObject.SetActive(false);
             NoSound.gameObject.SetActive(true);
+            GameManager.Instance.OpenSound = false;
         }
     }
     public void ChangeVibrationState()
     {
+        GameManager.Instance.PlayClickSound();
         UIManager.Instance.vibrationState = !UIManager.Instance.vibrationState;
         if (UIManager.Instance.vibrationState)
         {

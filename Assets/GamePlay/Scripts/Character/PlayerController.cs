@@ -17,7 +17,6 @@ public class PlayerController : Character, IInitializeVariables, IHit
     // Start is called before the first frame update
     void Start()
     {
-        ChangeState(new StatePlayerIdle());
         InitializeVariables();
         GameManager.Instance.CharacterList.Add(this);    //Thêm player vào trong list Character để quản lý
     }
@@ -25,6 +24,7 @@ public class PlayerController : Character, IInitializeVariables, IHit
     void Update()
     {
         ShowReticle();
+        ObstacleFading();
         if (!IsDeath && GameManager.Instance.gameState == GameManager.GameState.gameStarted)
         {
             if (currentState != null)
@@ -32,7 +32,7 @@ public class PlayerController : Character, IInitializeVariables, IHit
                 currentState.OnExecute(this);
             }
         }
-        ObstacleFading();
+        else if (GameManager.Instance.gameState == GameManager.GameState.gameWin) OnWin();
         _Cycle.transform.position = transform.position;
         if (GameManager.Instance.IsAliveAmount == 1 && !IsDeath) StartCoroutine(CheckGameVictory());
     }
@@ -58,16 +58,16 @@ public class PlayerController : Character, IInitializeVariables, IHit
 
     public void CheckIdleToPatrol()
     {
-        if (_Joystick.Horizontal != 0 || _Joystick.Vertical != 0) ChangeState(new StatePlayerPatrol());
+        if ((_Joystick.Horizontal != 0 || _Joystick.Vertical != 0)&&!IsDeath) ChangeState(new StatePlayerPatrol());
     }
     public void CheckPatrolToIdle()
     {
-        if (_Joystick.Horizontal == 0 && _Joystick.Vertical == 0) ChangeState(new StatePlayerIdle());
+        if ((_Joystick.Horizontal == 0 && _Joystick.Vertical == 0)&&!IsDeath) ChangeState(new StatePlayerIdle());
     }
     public void CheckIdletoAttack()
     {
         
-        if (enableToAttackFlag && FindNearistEnemy(AttackRange) != Vector3.zero)
+        if (enableToAttackFlag && FindNearistEnemy(AttackRange) != Vector3.zero&&!IsDeath)
         {
             ChangeState(new StatePlayerAttack());
         }
@@ -82,7 +82,7 @@ public class PlayerController : Character, IInitializeVariables, IHit
     IEnumerator TurntoIdle()
     {
         yield return new WaitForSeconds(0.5f);
-        if(GameManager.Instance.gameState == GameManager.GameState.gameStarted&& _Joystick.Horizontal == 0 && _Joystick.Vertical == 0) ChangeState(new StatePlayerIdle());
+        if(GameManager.Instance.gameState == GameManager.GameState.gameStarted&& _Joystick.Horizontal == 0 && _Joystick.Vertical == 0&&!IsDeath) ChangeState(new StatePlayerIdle());
     }
 
     void changeAttackRange(float attackRange)
@@ -124,25 +124,27 @@ public class PlayerController : Character, IInitializeVariables, IHit
     {
         AttackRange = 5f;
         AttackSpeed = 10;
-        MoveSpeed = 5f;
+        MoveSpeed = 6f;
         weaponListCreate();                 //Khởi tạo danh sách vũ khí
         CreateListOfWeaponMaterial();       //Khởi tạo danh sách Material của vũ khí
         weaponSwitching(weaponType.Hammer, new weaponMaterialsType[] {weaponMaterialsType.Hammer_1});
-        ChangeClothes(clothesType.dabao);
         UpdatePlayerItem();
         IInitializeSingleton();
         changeAttackRange(AttackRange);             
         IsDeath = false;
         Level = 0;
+        ChangeState(new StatePlayerIdle());
     }
 
     public void OnHit()
     {
+        currentState.OnExit(this);
         OnDeath();
         Reticle.SetActive(false);
         IsDeath = true;
         GameManager.Instance.KilledAmount++;
         GameManager.Instance.gameState = GameManager.GameState.gameOver;
+        PlayDieAudio();
     }
 
     void ObstacleFading()
@@ -166,6 +168,7 @@ public class PlayerController : Character, IInitializeVariables, IHit
         transform.localScale = new Vector3(1f + 0.1f * Level, 1f + 0.1f * Level, 1f + 0.1f * Level);    //Khi tăng 1 level thì sẽ tăng Scale của Player thêm 10% so với kích thước khi Start game
         MoveSpeed = (1f + 0.05f * Level) * 5f;                                                          //Tốc độ di chuyển của Player tăng 5% so với khi Start game.
         changeAttackRange(1.05f * AttackRange);                                                         //Tăng 5% tầm bắn
+        PlaySizeUpAudio();
     }
 
     public void weaponSwitching(weaponType _weaponType, weaponMaterialsType[] _weaponMaterial)
@@ -212,14 +215,17 @@ public class PlayerController : Character, IInitializeVariables, IHit
     
     public void ChangeState(IStatePlayer state)
     {
-        if (currentState != null)
+        if (state != currentState)
         {
-            currentState.OnExit(this);
-        }
-        currentState = state;
-        if (currentState != null)
-        {
-            currentState.OnEnter(this);
+            if (currentState != null)
+            {
+                currentState.OnExit(this);
+            }
+            currentState = state;
+            if (currentState != null)
+            {
+                currentState.OnEnter(this);
+            }
         }
     }
 
@@ -243,7 +249,11 @@ public class PlayerController : Character, IInitializeVariables, IHit
     IEnumerator CheckGameVictory()
     {
         yield return new WaitForSeconds(1);
-        if (GameManager.Instance.IsAliveAmount == 1 && !IsDeath) GameManager.Instance.gameState = GameManager.GameState.gameWin;    //Chỉ còn 1 character còn sống và Player vẫn sống thì Victory
+        if (GameManager.Instance.IsAliveAmount == 1 && !IsDeath)
+        {
+            GameManager.Instance.gameState = GameManager.GameState.gameWin;    //Chỉ còn 1 character còn sống và Player vẫn sống thì Victory
+            PlayWinAudio();
+        }
         else GameManager.Instance.gameState = GameManager.GameState.gameOver;
     }
 }

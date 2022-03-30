@@ -8,7 +8,6 @@ public class CanvasGamePlay : UICanvas
     [SerializeField] private FloatingJoystick _Joystick;
     [SerializeField] private TextMeshProUGUI aliveAmount;
     [SerializeField] private GameObject guide;
-    [SerializeField] private Transform _image;
     private void Awake()
     {
         GameObject.FindObjectOfType<PlayerController>()._Joystick = _Joystick;
@@ -25,7 +24,9 @@ public class CanvasGamePlay : UICanvas
         if (GameManager.Instance.gameState == GameManager.GameState.gameOver)
         {
             StartCoroutine(GameOver());
-        }else if (GameManager.Instance.gameState == GameManager.GameState.gameWin)
+            _Joystick.gameObject.SetActive(false);
+        }
+        else if (GameManager.Instance.gameState == GameManager.GameState.gameWin)
         {
             StartCoroutine(GameWin());
         }
@@ -35,10 +36,12 @@ public class CanvasGamePlay : UICanvas
     {
         base.OnInit();
         guide.SetActive(true);
+        _Joystick.gameObject.SetActive(true);
     }
 
     public void OpenSetting()
     {
+        GameManager.Instance.PlayClickSound();
         UIManager.Instance.OpenUI(UIName.Setting);
     }
 

@@ -13,6 +13,10 @@ public class Bullet : MonoBehaviour
     {
         BulletMove();
     }
+    private void OnEnable()
+    {
+        GameManager.Instance.PlayAttackAudio();
+    }
     private void Update()
     {
         if (Vector3.Distance(OwnerAttackPos, transform.position) > AttackRange)
@@ -104,6 +108,7 @@ public class Bullet : MonoBehaviour
         }
         else if (other.CompareTag("Obstacle"))
         {
+            GameManager.Instance.PlayWeaponImpackSound();
             DestroyBullet();
         }
     }

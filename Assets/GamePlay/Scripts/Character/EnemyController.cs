@@ -25,8 +25,6 @@ public class EnemyController : Character, IInitializeVariables, IHit
     }
     void Start()
     {
-        OnResetAllTrigger();
-        ChangeState(new StateEnemyIdle());
         InitializeVariables();
         GameManager.Instance.CharacterList.Add(this); //Tất cả các enemy được sinh ra sẽ được Add vào trong CharacterList này để quản lý.
     }
@@ -34,7 +32,7 @@ public class EnemyController : Character, IInitializeVariables, IHit
     void Update()
     {
         timeCouting += Time.deltaTime;
-        if (!IsDeath&& GameManager.Instance.gameState == GameManager.GameState.gameStarted)
+        if (!IsDeath&& GameManager.Instance.gameState == GameManager.GameState.gameStarted|| GameManager.Instance.gameState == GameManager.GameState.gameOver)
         {
             if (currentState != null)
             {
@@ -45,11 +43,11 @@ public class EnemyController : Character, IInitializeVariables, IHit
     public void EnemyMovement()
     {
         OnRun();
-        if (GameManager.Instance.gameState==GameManager.GameState.gameStarted)
+        if (GameManager.Instance.gameState==GameManager.GameState.gameStarted|| GameManager.Instance.gameState == GameManager.GameState.gameOver)
         {
             agent.SetDestination(EnemyDestination);
-            enableToAttackFlag = true;
             OnRun();
+            enableToAttackFlag = true;
         }
     }
 
@@ -72,26 +70,29 @@ public class EnemyController : Character, IInitializeVariables, IHit
     }
     public void ChangeState(IState state)   //Hàm chuyển đổi trạng thái State
     {
-        if (currentState != null)
+        if (state != currentState)
         {
-            currentState.OnExit(this);
+            if (currentState != null)
+            {
+                currentState.OnExit(this);
+            }
+            currentState = state;
+            if (currentState != null)
+            {
+                currentState.OnEnter(this);
+            }
         }
-        currentState = state;
-        if (currentState != null)
-        {
-            currentState.OnEnter(this);
-        }
+        
     }
     public void RestartTimeCounting()
     {
         timeCouting = 0;
-        timeLimit = Random.Range(3f, 7f);
+        timeLimit = Random.Range(1.5f, 3.5f);
     }
     
     public void CheckIdletoAttack()
     {
         if (FindNearistEnemy(AttackRange) != Vector3.zero&& enableToAttackFlag) ChangeState(new StateEnemyAttack());
-        else if(timeCouting>1.03f) ChangeState(new StateEnemyPatrol());
     }
 
     public void CheckPatroltoAttack()
@@ -114,8 +115,6 @@ public class EnemyController : Character, IInitializeVariables, IHit
         }
     }
 
-
-    
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Obstacle"))
@@ -133,6 +132,8 @@ public class EnemyController : Character, IInitializeVariables, IHit
         AddWeaponPower();
         IsDeath = false;
         Level = 0;
+        OnResetAllTrigger();
+        ChangeState(new StateEnemyIdle());
     }
 
     public override void attack()
@@ -144,6 +145,8 @@ public class EnemyController : Character, IInitializeVariables, IHit
     }
     public void OnHit()
     {
+        PlayDieAudio();
+        currentState.OnExit(this);
         IsDeath = true;
         agent.SetDestination(transform.position);
         GameManager.Instance.KilledAmount++;

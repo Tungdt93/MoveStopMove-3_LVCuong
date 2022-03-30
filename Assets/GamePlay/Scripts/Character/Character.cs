@@ -72,9 +72,15 @@ public class Character : MonoBehaviour
     public int opponentID;
     public int EnemySkinID;
     public bool IsDeath;
+    public AudioSource audiosource;
+    
+    [SerializeField] private AudioClip DieAudio;
+    [SerializeField] private AudioClip SizeUpAudio;
+    [SerializeField] private AudioClip WinAudio;
     public Dictionary<weaponMaterialsType, Material[]> ListWeaponMaterial = new Dictionary<weaponMaterialsType, Material[]>();
     private void Start()
     {
+        audiosource = GetComponent<AudioSource>();
         _weapon = GetComponent<WeaponInfo>();
         PantsPositionRenderer = GetComponent<Renderer>();
         SkinPositionRenderer = GetComponent<Renderer>();
@@ -94,6 +100,18 @@ public class Character : MonoBehaviour
 
     }
 
+    public void PlayDieAudio()
+    {
+        if (GameManager.Instance.OpenSound) audiosource.PlayOneShot(DieAudio);
+    }
+    public void PlaySizeUpAudio()
+    {
+        if (GameManager.Instance.OpenSound) audiosource.PlayOneShot(SizeUpAudio);
+    }
+    public void PlayWinAudio()
+    {
+        if (GameManager.Instance.OpenSound) audiosource.PlayOneShot(WinAudio);
+    }
     public void weaponListCreate() //Thêm vũ khí vào weaponList
     {
         for (int i = 0; i < weaponArray.Length; i++)
@@ -181,8 +199,8 @@ public class Character : MonoBehaviour
     public void ChangeClothes(clothesType _ClothesType)
     {
         SetFullOrNormal _setfullOrNormal;
-        _setfullOrNormal = ((int)_ClothesType > 19) ? (SetFullOrNormal.SetFull) : (SetFullOrNormal.Normal);
-        if (_setfullOrNormal!=lastClothes|| _setfullOrNormal == SetFullOrNormal.SetFull) ResetClothes();
+        _setfullOrNormal = ((int)_ClothesType > 19) ? (SetFullOrNormal.SetFull) : (SetFullOrNormal.Normal); //Xét xem ClothesType có phải Set full hay không
+        if (_setfullOrNormal!=lastClothes|| _setfullOrNormal == SetFullOrNormal.SetFull) ResetClothes();    //Nếu là setfull mà bộ trước không phải setfull thì xóa hết để thay setfull vào
         switch (_ClothesType)
         {
             case clothesType.Arrow:
@@ -235,6 +253,7 @@ public class Character : MonoBehaviour
                 }
             case clothesType.Rau:
                 {
+                    ResetHeadPosition();
                     Instantiate(CharacterClothes.HeadPosition[8], HeadPosition);
                     break;
                 }
@@ -252,62 +271,60 @@ public class Character : MonoBehaviour
                 }
             case clothesType.Batman:
                 {
-                    ResetClothes();
+                    GetDefaultClothes();
                     PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[4];
                     break;
                 }
             case clothesType.Chambi:
                 {
-                    ResetClothes();
+                    GetDefaultClothes();
                     PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[5];
                     break;
                 }
             case clothesType.comy:
                 {
-                    ResetClothes();
+                    GetDefaultClothes();
                     PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[6];
                     break;
                 }
             case clothesType.dabao:
                 {
-                    ResetClothes();
+                    GetDefaultClothes();
                     PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[7];
                     break;
                 }
             case clothesType.onion:
                 {
-                    ResetClothes();
+                    GetDefaultClothes();
                     PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[8];
                     break;
                 }
             case clothesType.pokemon:
                 {
-                    ResetClothes();
+                    GetDefaultClothes();
                     PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[9];
                     break;
                 }
             case clothesType.rainbow:
                 {
-                    ResetClothes();
+                    GetDefaultClothes();
                     PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[10];
                     break;
                 }
             case clothesType.Skull:
                 {
-                    ResetClothes();
+                    GetDefaultClothes();
                     PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[11];
                     break;
                 }
             case clothesType.Vantim:
                 {
-                    ResetClothes();
+                    GetDefaultClothes();
                     PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[12];
                     break;
                 }
             case clothesType.Devil:
                 {
-                    ResetClothes();
-                    ResetHeadPosition();
                     Instantiate(CharacterClothes.HeadPosition[10],HeadPosition);
                     Instantiate(CharacterClothes.BackPosition[2],BackPosition);
                     Instantiate(CharacterClothes.TailPosition[0],TailPosition);
@@ -316,8 +333,6 @@ public class Character : MonoBehaviour
                 }
             case clothesType.Angel:
                 {
-                    ResetHeadPosition();
-                    ResetLeftHandPosition();
                     Instantiate(CharacterClothes.HeadPosition[9], HeadPosition);
                     Instantiate(CharacterClothes.BackPosition[0], BackPosition);
                     Instantiate(CharacterClothes.LeftHandPosition[0], LeftHandPosition);
@@ -326,8 +341,6 @@ public class Character : MonoBehaviour
                 }
             case clothesType.Witch:
                 {
-                    ResetHeadPosition();
-                    ResetLeftHandPosition();
                     Instantiate(CharacterClothes.HeadPosition[12], HeadPosition);
                     Instantiate(CharacterClothes.LeftHandPosition[1], LeftHandPosition);
                     SkinPositionRenderer.sharedMaterial = CharacterClothes.SkinMaterials[6];
@@ -341,7 +354,6 @@ public class Character : MonoBehaviour
                 }
             case clothesType.Thor:
                 {
-                    ResetHeadPosition();
                     Instantiate(CharacterClothes.HeadPosition[11], HeadPosition);
                     SkinPositionRenderer.sharedMaterial = CharacterClothes.SkinMaterials[5];
                     break;
@@ -352,22 +364,23 @@ public class Character : MonoBehaviour
 
     public void ResetClothes()
     {
-        foreach (Transform item in TailPosition)
-        {
-            Destroy(item.gameObject);
-        }
-        foreach (Transform item in BackPosition)
-        {
-            Destroy(item.gameObject);
-        }
+        ResetShieldPosition();
+        ResetLeftHandPosition();
+        ResetHeadPosition();
+        ResetBackPosition();
+        ResetTailPosition();
+        GetDefaultClothes();
+    }
+
+    public void GetDefaultClothes() //Thay đổi quần và màu skin về default
+    {
         PantsPositionRenderer.sharedMaterial = CharacterClothes.PantsMaterials[3];
-        if(gameObject.CompareTag("Player")) SkinPositionRenderer.sharedMaterial = CharacterClothes.SkinMaterials[8];                    //Nếu là Player thì cho màu vàng là default
+        if (gameObject.CompareTag("Player")) SkinPositionRenderer.sharedMaterial = CharacterClothes.SkinMaterials[8];                    //Nếu là Player thì cho màu vàng là default
         else                                                                                                                            //Nếu là Enemy thì chọn màu random
         {
             EnemySkinID = Random.Range(0, 21);
             SkinPositionRenderer.sharedMaterial = _enemySkin.EnemyColor[EnemySkinID];
         }
-        
     }
 
     public void ResetShieldPosition()
@@ -389,6 +402,22 @@ public class Character : MonoBehaviour
     public void ResetHeadPosition()
     {
         foreach (Transform item in HeadPosition)
+        {
+            Destroy(item.gameObject);
+        }
+    }
+
+    public void ResetBackPosition()
+    {
+        foreach (Transform item in BackPosition)
+        {
+            Destroy(item.gameObject);
+        }
+    }
+
+    public void ResetTailPosition()
+    {
+        foreach (Transform item in TailPosition)
         {
             Destroy(item.gameObject);
         }

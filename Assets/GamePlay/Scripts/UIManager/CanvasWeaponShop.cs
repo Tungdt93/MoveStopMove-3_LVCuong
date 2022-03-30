@@ -26,7 +26,8 @@ public class CanvasWeaponShop : UICanvas
         {
             WeaponShopInfo.Add((weaponType)i, WeaponState.CantBuy);
         }
-
+        PlayerPrefs.SetInt("WeaponShop" + (weaponType)((int)(weaponType.Hammer)), 3);    //Đặt vũ khí mặc định hammer là đã mua
+        PlayerPrefs.Save();
     }
     private void OnEnable()
     {
@@ -56,6 +57,7 @@ public class CanvasWeaponShop : UICanvas
     }
     public void OpenMainMenu()
     {
+        GameManager.Instance.PlayClickSound();
         UIManager.Instance.OpenUI(UIName.MainMenu);
     }
     private void OnDisable()
@@ -76,6 +78,7 @@ public class CanvasWeaponShop : UICanvas
 
     public void NextButton()
     {
+        GameManager.Instance.PlayClickSound();
         if (ShopWeaponID < 11)
         {
             ShopWeaponID++;
@@ -87,6 +90,7 @@ public class CanvasWeaponShop : UICanvas
     }
     public void BackButton()
     {
+        GameManager.Instance.PlayClickSound();
         if (ShopWeaponID > 0)
         {
             ShopWeaponID--;
@@ -142,6 +146,7 @@ public class CanvasWeaponShop : UICanvas
             PlayerPrefs.Save();
             PlayerPrefs.SetInt("WeaponShop" + (weaponType)ShopWeaponID, 3);
             PlayerPrefs.Save();
+            GameManager.Instance.PlayClickSound();
         }
     }
     public void SelectWeapon()
@@ -164,6 +169,7 @@ public class CanvasWeaponShop : UICanvas
             PlayerPrefs.SetInt("WeaponShop" + (weaponType)ShopWeaponID, 4);
             PlayerPrefs.Save();
             ShowState();
+            GameManager.Instance.PlayClickSound();
         }
     }
 
